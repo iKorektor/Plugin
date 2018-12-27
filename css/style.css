@@ -3,10 +3,10 @@
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
 .ik-spin {-webkit-animation: spin 2s linear infinite; -moz-animation: spin 2s linear infinite; animation: spin 2s linear infinite}
 #ik-do {position: absolute; display: none; width: 30px; height: 30px; border: none; opacity: .5; padding: 0; margin: 0; color: #fff; box-shadow: 0 0 5px grey; 
-    background: #093 url(http://localhost/plugin/img/btn.png) no-repeat 7px 2px; overflow: hidden; cursor: pointer; z-index: 9999; border-radius: 15px; 
+    background: #093 url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@1.0.0/img/btn.png) no-repeat 7px 2px; overflow: hidden; cursor: pointer; z-index: 9999; border-radius: 15px; 
     -webkit-transition: width 500ms ease-in-out; -moz-transition: width 500ms ease-in-out; -o-transition: width 500ms ease-in-out; transition: width 500ms ease-in-out}
 #ik-do p {position: absolute; top: 0; right: 0; width: 30px; height: 30px; padding: 0; margin: 0; 
-   background: #093 url(http://localhost/plugin/img/btn.png) no-repeat -102px 2px; border-radius: 15px}
+   background: #093 url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@1.0.0/img/btn.png) no-repeat -102px 2px; border-radius: 15px}
 #ik-do:hover {opacity: 1; width: 138px}
 #ik-do:active, #ik-do:focus, #ik-do::-moz-focus-inner {outline: none; border: 0}
 #ik-inf {display: none; width: 90%; max-width: 500px; position: absolute; margin: 0; padding: 9px; background: #fff; color: #191919; box-shadow: 0 0 9px grey; 
