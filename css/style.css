@@ -9,40 +9,39 @@
    background: #093 url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@1.0.0/img/btn.png) no-repeat -102px 2px; border-radius: 15px}
 #ik-do:hover {opacity: 1; width: 138px}
 #ik-do:active, #ik-do:focus, #ik-do::-moz-focus-inner {outline: none; border: 0}
-#ik-inf {display: none; width: 90%; max-width: 500px; position: absolute; margin: 0; padding: 9px; background: #fff; color: #191919; box-shadow: 0 0 9px grey; 
+#ik-inf {display: none; width: 90%; max-width: 500px; position: absolute; margin: 0; padding: 8px; background: #fff; color: #191919; box-shadow: 0 0 9px grey; 
     z-index: 9999; box-sizing: border-box; border-radius: 4px}
 #ik-inf:before {content: ""; position: absolute; bottom: 100%; right: 7px; border: solid; border-width: 9px; border-color: transparent transparent #fff transparent}
-#ik-inf div {width: 100%; margin: 0; padding: 9px 9px 15px 9px; border: 2px solid #f1f1f1; background: #fff; position: relative; box-sizing: border-box; border-radius: 4px}
-#ik-inf div p {margin: 0; padding: 0; text-align: left; white-space: pre-wrap; font: normal 16px Helvetica; line-height: 25px}
-#ik-inf div p:last-child {width: 100%; position: absolute; bottom: 3px; left: 0; text-align: right; font: normal 10px Arial}
-#ik-inf .ik-corr-err {font-style: oblique}
-#ik-inf a {color: #0078A0}
-#ik-legend {display: inline-block; width: 14px; height: 14px; margin: 0 5px; background: #ccc; font: bold 11px Arial; text-align: center; color: #fff; cursor: pointer; border-radius: 7px}
-#ik-inf button {display: inline-block; height: 32px; width: 49%; margin: 9px 1% 0 0; float: left; background: #589d62; color: #fff; padding: 0; 
-    font: bold 13px Helvetica; text-align: center; cursor: pointer; border-radius: 4px}
+#ik-inf div {width: 100%; margin: 0; padding: 9px; box-sizing: border-box; border: 2px solid #f1f1f1; background: #fff; position: relative; 
+    text-align: left; white-space: pre-wrap; font: normal 16px Arial, Helvetica; line-height: 25px; border-radius: 4px}
+#ik-inf div.ik-corr-err {font-style: oblique}
+#ik-inf p {margin: 0; padding: 0; text-align: right; font: normal 11px Arial; clear: both}
+#ik-inf a {color: #0078A0; margin: 0 5px}
+#ik-inf button {display: inline-block; height: 32px; width: 49%; margin: 9px 1% 10px 0; float: left; background: #589d62; color: #fff; padding: 0; 
+    font: bold 13px Arial, Helvetica; text-align: center; cursor: pointer; border-radius: 4px}
 #ik-inf button.ik-btn-disabled {opacity: .5; cursor: not-allowed}
 #ik-inf #ik-cancel {margin: 9px 0 0 1%; background: #e0e0e0; color: #191919}
-#ik-inf button:hover, #ik-inf a:hover, #ik-legend:hover {opacity: .7}
+#ik-inf button:hover, #ik-inf a:hover {opacity: .7}
 #ik-inf button:active, #ik-inf button:focus, #ik-inf button::-moz-focus-inner {outline: none; border: 0}
 #ik-colors {max-height: 0; overflow: hidden; margin-top: 5px; list-style: none; margin: 0; padding: 0}
 #ik-colors li {margin-top: 9px; padding-left: 15px; text-align: left; font: normal 12px Helvetica}
 #ik-colors li:before {content: ""; display: inline-block; margin: 0 0 -2px -15px; height: 15px; width: 15px; border-radius: 50%}
 .ik-bgword {border-radius: 2px; position: relative}
-.ik-bgword span {font: normal 16px Helvetica}
+.ik-bgword span {font: normal 16px Arial, Helvetica}
 .ik-bgword ul {position: absolute; width: 150px; box-sizing: border-box; left: 45%; top: 7px; transform: translateX(-49%); visibility: hidden; text-align: center; 
     background: rgba(0,0,0,.8); color: #fff; padding: 0 9px; font: bold 12px Helvetica; box-shadow: 0 0 9px #fff; border-radius: 4px; z-index: 9999}
 .ik-bgword ul li {list-style-type: none; display: block; background: #f1f1f1; color: #191919; margin: 9px 0; padding: 3px 0; font: bold 14px Helvetica; 
     cursor: pointer; border-radius: 4px}
-.ik-bgword ul li:hover {background: yellowgreen}
+.ik-bgword ul li:hover {background: #ccc}
 .ik-bgword:hover ul {visibility: visible}
 .ik-bgword ul li.ik-act-user {font: normal 15px Helvetica}
 .ik-bgword ul li.ik-hidden {display: none}
-.ik-corr-succ, #ik-colors li:nth-child(1):before {background: #98FB98}
-.ik-corr-user, #ik-colors li:nth-child(2):before {background: linear-gradient(to bottom right, #98FB98 50%, #98FB98 50%); border: 1px dotted #589d62}
-.ik-corr-sugg, #ik-colors li:nth-child(3):before {background: #87cefa}
-.ik-corr-sugg-succ, #ik-colors li:nth-child(4):before {background: linear-gradient(to bottom right, #98FB98 50%, #87cefa 50%)}
-.ik-corr-sugg2, #ik-colors li:nth-child(5):before {background: #f90}
-.ik-corr-sugg2-succ, #ik-colors li:nth-child(6):before {background: linear-gradient(to bottom right, #98FB98 50%, #f90 50%)}
-.ik-corr-fail, #ik-colors li:nth-child(7):before {background: #f66}
-.ik-corr-revert, #ik-colors li:nth-child(8):before {background: #ccc}
+.ik-corr-succ {background: #98FB98}
+.ik-corr-user {background: linear-gradient(to bottom right, #98FB98 50%, #98FB98 50%); border: 1px dotted #589d62}
+.ik-corr-sugg {background: #87cefa}
+.ik-corr-sugg-succ {background: linear-gradient(to bottom right, #98FB98 50%, #87cefa 50%)}
+.ik-corr-sugg2 {background: #f90}
+.ik-corr-sugg2-succ {background: linear-gradient(to bottom right, #98FB98 50%, #f90 50%)}
+.ik-corr-fail {background: #f66}
+.ik-corr-revert {background: #ccc}
 .ik-char-succ {padding: 0 1px}
