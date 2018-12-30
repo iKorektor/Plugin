@@ -1,8 +1,7 @@
-
 var iKorektor = new function () {
     const apiUrl = "https://api.ikorektor.pl";
-    const cssUrl = "https://cdn.jsdelivr.net/gh/ikorektor/plugin@1.0.0/css/style.min.css";
-    var activeEl, txtOrig;
+    const cssUrl = "https://cdn.jsdelivr.net/gh/ikorektor/plugin@1.1.0/css/style.min.css";
+    var activeEl, txtOrig, evBtn = false, evInf = false;
     var conf = {parags: 0, profanity: 0, gateway: true, location: "bottom"};
     var confEl = document.getElementById("ik-conf");
 
@@ -17,52 +16,58 @@ var iKorektor = new function () {
         document.body.insertAdjacentHTML("beforeend", `<button type="button" id="ik-do" title="Sprawdź błędy w tekście"><p></p></button>
 <link rel="stylesheet" type="text/css" href="${cssUrl}">`);
         
-        document.addEventListener("mousedown", function (e) {
-            if (e.target && e.target.id === "ik-do") {
-                prepareCorrect(e.target);
-            }
-        });
-        document.addEventListener("click", function (e) {
-            if (e.target) {
-                if (e.target.tagName.toLowerCase() === "li" && e.target.parentNode.parentNode.classList.contains("ik-bgword")) {
-                    wordCorrAction(e.target);
-                } else if (e.target.id === "ik-accept") {
-                    acceptCorrTxt();
-                } else if (e.target.id === "ik-cancel") {
-                    document.getElementById("ik-inf").style.display = "none";
-                    document.getElementById("ik-do").disabled = false;
-                } else if (e.target.id === "ik-legend") {
-                    showCorrInfo(e.target);
-                }
-            }
-        });
-        document.addEventListener("keydown", function(e) {
-            if (e.keyCode === 13 && e.target && e.target.classList.contains("ik-word-corr-origin")) { // 13 == Enter
-                wordEditEnd(e);
-            } else if (e.keyCode === 90 && e.ctrlKey && txtOrig) { // Ctrl+Z
-                activeEl.value = txtOrig;
-            }
-        });
-        document.addEventListener("focusin", function (e) {
+        document.addEventListener("focusin", e => {
             if (e.target) {
                 var tag = e.target.tagName.toLowerCase();
 
                 if (tag === "textarea" || (tag === "input" && e.target.getAttribute("type") === "text")) {
                     btnShow();
+                    
+                    if (!evBtn) {
+                        document.addEventListener("mousedown", e => {
+                            if (e.target && e.target.id === "ik-do")
+                                preCorr(e.target);
+                        });
+
+                        evBtn = true;
+                    }
                 }
             }
         });
-        document.addEventListener("focusout", function(e) {
+    };
+    
+    var addEvListeners = function() {
+        document.addEventListener("click", e => {
+            if (e.target) {
+                if (e.target.tagName.toLowerCase() === "li" && e.target.parentNode.parentNode.classList.contains("ik-bgword")) {
+                    wordCorrAction(e.target);
+                } else if (e.target.id === "ik-accept") {
+                    acceptCorr();
+                } else if (e.target.id === "ik-cancel") {
+                    activeEl.focus();
+                } else if (e.target.id === "ik-report") {
+                    e.preventDefault();
+                    window.open(e.target.href + "=" + (txtOrig || ""));
+                }
+            }
+        });
+        
+        document.addEventListener("keydown", e => {
+            if (e.keyCode === 13 && e.target && e.target.classList.contains("ik-word-corr-origin")) { // 13 == Enter
+                wordEditEnd(e.target);
+            } else if (e.keyCode === 90 && e.ctrlKey && txtOrig) { // Ctrl+Z
+                activeEl.value = txtOrig;
+                txtOrig = null;
+            }
+        });
+        
+        document.addEventListener("focusout", e => {
             if (e.target && e.target.classList.contains("ik-word-corr-origin")) {
-                wordEditEnd(e);
-            } else {
-                var el = document.getElementById("ik-inf");
-                
-                if (!el || !(el.offsetWidth || el.offsetHeight || el.getClientRects().length)) {
-                    document.getElementById("ik-do").style.display = "none";
-                }
+                wordEditEnd(e.target);
             }
         });
+        
+        evInf = true;
     };
 
     var btnShow = function () {
@@ -80,10 +85,11 @@ var iKorektor = new function () {
         btnEl.style.top = top.toFixed(2) + "px";
         btnEl.style.right = right.toFixed(2) + "px";
         btnEl.disabled = false;
-        if (infEl) infEl.style.display = "none";
+        if (infEl)
+            infEl.style.display = "none";
     };
 
-    var prepareCorrect = function (btnEl) {
+    var preCorr = function (btnEl) {
         var txt = getTxtareaTxt();
 
         if (txt.length < 3) {
@@ -94,10 +100,10 @@ var iKorektor = new function () {
         btnEl.disabled = true;
         btnEl.querySelector("p").classList.add("ik-spin");
         
-        ajaxCorrect(txt);
+        ajaxCorr(txt);
     };
 
-    var ajaxCorrect = function (txt) {
+    var ajaxCorr = function (txt) {
         fetch(apiUrl, {method: "POST", body: getFormData(txt)}).then(resp => {
             if (resp.ok)
                 return resp.json();
@@ -115,7 +121,7 @@ var iKorektor = new function () {
             }
         }).catch(err => {
             console.log(err);
-            showInfo("Wystąpił nieoczekiwany błąd. Być może straciłeś połączenie z Internetem lub plugin jest niepoprawnie skonfigurowany na stronie.", true);
+            showInfo("Coś poszło nie tak. Spróbuj ponownie za chwilę.", true);
         });
     };
     
@@ -126,9 +132,12 @@ var iKorektor = new function () {
         formData.append("text", txt);
         formData.append("app", "plugin");
         
-        if (conf.parags) formData.append("parags", conf.parags);
-        if (conf.profanity) formData.append("profanity", conf.profanity);
-        if (!conf.gateway) formData.append("gateway", conf.gateway);
+        if (conf.parags) 
+            formData.append("parags", conf.parags);
+        if (conf.profanity) 
+            formData.append("profanity", conf.profanity);
+        if (!conf.gateway) 
+            formData.append("gateway", conf.gateway);
         
         return formData;
     };
@@ -140,10 +149,11 @@ var iKorektor = new function () {
 
     var showInfo = function (inf, isErr) {
         var infEl = document.getElementById("ik-inf");
-        if (!infEl) infEl = setInfoHTML();
+        if (!infEl) 
+            infEl = setInfEl();
         
         var btnEl = document.getElementById("ik-do");
-        var txtEl = infEl.querySelector("div").querySelector("p");
+        var txtEl = infEl.querySelector("div");
         var btnAccEl = infEl.querySelector("#ik-accept");
         var btnOffs = getOffset(btnEl);
 
@@ -159,17 +169,24 @@ var iKorektor = new function () {
         
         btnAccEl.disabled = isErr;
         btnAccEl.classList.toggle("ik-btn-disabled", isErr);
-            
-        setWordActionButtons();
+        
+        if (!isErr)
+            setWordActionButtons();
     };
     
-    var setInfoHTML = function() {
+    var setInfEl = function() {
         document.body.insertAdjacentHTML("beforeend", `<div id="ik-inf">
-<div><p></p><p><a href="https://ikorektor.pl/pluginy" target="_blank">Plugin autokorekty – iKorektor</a><span id="ik-legend">i</span></p></div>
-<ul id="ik-colors"></ul>
+<div></div>
 <button type="button" id="ik-accept">Akceptuj i zamień</button>
 <button type="button" id="ik-cancel">Anuluj</button>
+<p><a href="https://ikorektor.pl/pluginy" target="_blank">Plugin autokorekty © iKorektor</a> • 
+<a href="https://ikorektor.pl/kontakt?report" id="ik-report">Zgłoś błąd korekty</a> • 
+<a href="https://ikorektor.pl/info" target="_blank">Objaśnienia</a></p>
+<ul id="ik-colors"></ul>
 </div>`);
+        
+        if (!evInf)
+            addEvListeners();
         
         return document.getElementById("ik-inf");
     };
@@ -223,7 +240,7 @@ var iKorektor = new function () {
 
         if (data.hasOwnProperty("sugg")) {
             for (var i = 0; i < data.sugg.length; i++) {
-                var sugg = data.sugg[i];
+                var sugg = data.sugg[i];console.log(sugg);
                 var cnt = sugg.length - 1;
                 var wrd = sugg[cnt];
                 var wrdLow = wrd.toLowerCase();
@@ -273,7 +290,7 @@ var iKorektor = new function () {
 
         if (data.hasOwnProperty("fail")) {
             for (var i = 0; i < data.fail.length; i++) {
-                txt = txt.replace(wordReg(data.fail[i]), '$1<span class="ik-bgword ik-corr-fail"><span data-word-corr-origin="$2" class="ik-word-corr-origin">$2</span><ul>Nierozpoznany błąd</ul></span>');
+                txt = txt.replace(wordReg(data.fail[i]), '$1<span class="ik-bgword ik-corr-fail"><span data-word-corr-origin="$2" class="ik-word-corr-origin">$2</span><ul></ul></span>');
             }
         }
 
@@ -283,13 +300,23 @@ var iKorektor = new function () {
     var wordReg = function (word, modifier) {
         return new RegExp("(\\s|[„(/,:;]|-|^)(" + word + ")(?=\\s|[.?!,…:;\"”()/<]|-|$)", "g" + (modifier || ""));
     };
+    
+    var acceptCorr = function () {
+        var txtCont = document.getElementById("ik-inf").querySelector("div").innerHTML;
+        var txtCorr = stripColorsHTML(txtCont); // remove iKorektor's HTML tags
+        var txtCorrDec = decodeHTML(txtCorr); // decode user's HTML tags for text inputs
+
+        corrReplaceTxtarea(txtCorrDec);
+        activeEl.focus();
+    };
 
     var wordSuggsRemove = function (suggs, word) {
         suggs.splice(suggs.indexOf(word), 1);
 
         if (word.indexOf("rz") > -1) {
             var index = suggs.indexOf(word.replace("rz", "z"));
-            if (index > -1) suggs.splice(index, 1);
+            if (index > -1) 
+                suggs.splice(index, 1);
         }
 
         return suggs;
@@ -317,8 +344,7 @@ var iKorektor = new function () {
         sel.addRange(range);
     };
 
-    var wordEditEnd = function(e) {
-        var wordEl = e.target;
+    var wordEditEnd = function(wordEl) {
         var ulEl = wordEl.nextElementSibling;
         var word = wordEl.textContent;
         var originEqual = word === wordEl.getAttribute("data-word-origin");
@@ -332,7 +358,8 @@ var iKorektor = new function () {
         ulEl.querySelector(".ik-act-edit").classList.toggle("ik-hidden", word === ""); // word removed - it's impossible to edit it anymore, so we must to hide the edit button (only restore button will be shown)
 
         var revEl = ulEl.querySelector(".ik-act-revert");
-        if (revEl) revEl.classList.toggle("ik-hidden", originEqual);
+        if (revEl) 
+            revEl.classList.toggle("ik-hidden", originEqual);
     };
 
     var wordReplaceWithSugg = function (wordEl, liEl) {
@@ -358,7 +385,8 @@ var iKorektor = new function () {
         liEl.parentNode.querySelector(".ik-act-edit").style.display = "block";
         
         var revEl = liEl.parentNode.querySelector(".ik-act-revert");
-        if (revEl) revEl.style.display = "block";
+        if (revEl) 
+            revEl.style.display = "block";
     };
 
     var wordCorrAction = function (liEl) {
@@ -375,15 +403,6 @@ var iKorektor = new function () {
         }
     };
 
-    var acceptCorrTxt = function () {
-        var txtCont = document.getElementById("ik-inf").querySelector("div").querySelector("p").innerHTML;
-        var txtCorr = stripColorsHTML(txtCont); // remove iKorektor's HTML tags
-        var txtCorrDec = decodeHTML(txtCorr); // decode user's HTML tags for text inputs
-
-        corrReplaceTxtarea(txtCorrDec);
-        activeEl.focus();
-    };
-
     var unPolish = function (txt) {
         return txt.replace('ó', 'o').replace('ł', 'l').replace('ą', 'a').replace('ę', 'e').replace('ś', 's').replace('ń', 'n').replace('ć', 'c').replace('ż', 'z').replace('ź', 'z');
     };
@@ -396,33 +415,6 @@ var iKorektor = new function () {
         var map = {'&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#039;': "'"};
         return str.replace(/&amp;|&lt;|&gt;|&quot;|&#039;/g, m => map[m]);
     };
-    
-    var showCorrInfo = function(el) {
-        var liEl = document.getElementById("ik-colors");
-        
-        if (liEl.innerHTML === "" && !el.classList.contains("ik-spin")) {
-            var showResp = function(txt) {
-                liEl.innerHTML = txt;
-                slideToggle(liEl);
-                el.classList.remove("ik-spin");
-            };
-            
-            el.classList.add("ik-spin");
-            
-            fetch("https://ikorektor.pl/corr_info").then(resp => {
-                if (resp.ok)
-                    return resp.text();
-                
-                throw Error(resp.statusText);
-            }).then(data => {
-                showResp(data);
-            }).catch(err => {
-                showResp(err);
-            });
-        } else {
-            slideToggle(liEl);
-        }
-    };
 
     var getOffset = function (el) {
         const box = el.getBoundingClientRect();
@@ -432,12 +424,10 @@ var iKorektor = new function () {
             left: box.left + window.pageXOffset - document.documentElement.clientLeft
         };
     };
-
-    var slideToggle = function (el) {
-        el.style.transition = "max-height 1s";
-        const {height} = el.ownerDocument.defaultView.getComputedStyle(el, null);
-        el.style["max-height"] = (parseInt(height, 10) === 0 ? 500 : 0) + "px";
-    };
 };
 
 iKorektor.init();
+       
+       
+
+    
