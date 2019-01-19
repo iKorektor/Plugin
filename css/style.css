@@ -1,47 +1,41 @@
 @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
-.ik-spin {-webkit-animation: spin 2s linear infinite; -moz-animation: spin 2s linear infinite; animation: spin 2s linear infinite}
-#ik-do {position: absolute; display: none; width: 30px; height: 30px; border: none; opacity: .5; padding: 0; margin: 0; color: #fff; box-shadow: 0 0 5px grey; 
-    background: #093 url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@1.0.0/img/btn.png) no-repeat 7px 2px; overflow: hidden; cursor: pointer; z-index: 9999; border-radius: 15px; 
-    -webkit-transition: width 500ms ease-in-out; -moz-transition: width 500ms ease-in-out; -o-transition: width 500ms ease-in-out; transition: width 500ms ease-in-out}
-#ik-do p {position: absolute; top: 0; right: 0; width: 30px; height: 30px; padding: 0; margin: 0; 
-   background: #093 url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@1.0.0/img/btn.png) no-repeat -102px 2px; border-radius: 15px}
-#ik-do:hover {opacity: 1; width: 138px}
-#ik-do:active, #ik-do:focus, #ik-do::-moz-focus-inner {outline: none; border: 0}
-#ik-inf {display: none; width: 90%; max-width: 500px; position: absolute; margin: 0; padding: 8px; background: #fff; color: #191919; box-shadow: 0 0 9px grey; 
-    z-index: 9999; box-sizing: border-box; border-radius: 4px}
-#ik-inf:before {content: ""; position: absolute; bottom: 100%; right: 7px; border: solid; border-width: 9px; border-color: transparent transparent #fff transparent}
-#ik-inf div {width: 100%; margin: 0; padding: 9px; box-sizing: border-box; border: 2px solid #f1f1f1; background: #fff; position: relative; 
-    text-align: left; white-space: pre-wrap; font: normal 16px Arial, Helvetica; line-height: 25px; border-radius: 4px}
+.ik-spin:after {-webkit-animation: spin 2s linear infinite; -moz-animation: spin 2s linear infinite; animation: spin 2s linear infinite}
+#ik-do {position: absolute; display: none; width: 30px; height: 30px; border: none; opacity: .7; padding: 0; margin: 0; box-shadow: 0 0 5px grey; 
+    background: #093 url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@2.0.0/img/btn.png) no-repeat 7px 2px; overflow: hidden; cursor: pointer; z-index: 9999; border-radius: 15px; 
+    -webkit-transition: width 400ms ease-in-out; -moz-transition: width 400ms ease-in-out; -o-transition: width 400ms ease-in-out; transition: width 400ms ease-in-out}
+#ik-do:after {content: ""; position: absolute; top: 0; right: 0; width: 30px; height: 30px; 
+    background: #093 url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@2.0.0/img/btn.png) no-repeat -102px 2px; border-radius: 15px}
+#ik-do:hover {opacity: 1; width: 136px}
+#ik-inf {display: none; width: 92%; max-width: 450px; position: absolute; margin: 0; padding: 11px 11px 0; background: #fff; color: #191919; box-shadow: 0 0 5px grey; 
+    box-sizing: border-box; z-index: 9999; border-radius: 4px}
+#ik-inf:before {content: ""; position: absolute; bottom: 100%; right: 6px; border: solid; border-width: 9px; border-color: transparent transparent #fff transparent}
+#ik-inf div {width: 100%; margin: 0; padding: 6px; box-sizing: border-box; border: 2px solid #f1f1f1; background: #fff; text-align: left; white-space: pre-wrap; 
+    font: normal 16px Arial; line-height: 22px; border-radius: 4px}
 #ik-inf div.ik-corr-err {font-style: oblique}
-#ik-inf p {margin: 0; padding: 0; text-align: right; font: normal 11px Arial; clear: both}
-#ik-inf a {color: #0078A0; margin: 0 5px}
-#ik-inf button {display: inline-block; height: 32px; width: 49%; margin: 9px 1% 10px 0; float: left; background: #589d62; color: #fff; padding: 0; 
-    font: bold 13px Arial, Helvetica; text-align: center; cursor: pointer; border-radius: 4px}
-#ik-inf button.ik-btn-disabled {opacity: .5; cursor: not-allowed}
-#ik-inf #ik-cancel {margin: 9px 0 0 1%; background: #e0e0e0; color: #191919}
+#ik-inf p {margin: 0; padding: 0; text-align: right; font: normal 11px Arial; color: grey; clear: both}
+#ik-inf p a {display: inline-block; margin: 0 8px 7px}
+#ik-inf a {color: #0078A0}
+#ik-inf button {display: inline-block; height: 32px; width: 48%; margin: 11px 2px; padding: 0; float: right; background: #589d62; color: #fff; 
+    font: normal 15px Arial; text-align: center; cursor: pointer; border-radius: 4px}
+#ik-inf button:disabled {opacity: .7; cursor: not-allowed}
 #ik-inf button:hover, #ik-inf a:hover {opacity: .7}
-#ik-inf button:active, #ik-inf button:focus, #ik-inf button::-moz-focus-inner {outline: none; border: 0}
-#ik-colors {max-height: 0; overflow: hidden; margin-top: 5px; list-style: none; margin: 0; padding: 0}
-#ik-colors li {margin-top: 9px; padding-left: 15px; text-align: left; font: normal 12px Helvetica}
-#ik-colors li:before {content: ""; display: inline-block; margin: 0 0 -2px -15px; height: 15px; width: 15px; border-radius: 50%}
-.ik-bgword {border-radius: 2px; position: relative}
-.ik-bgword span {font: normal 16px Arial, Helvetica}
-.ik-bgword ul {position: absolute; width: 150px; box-sizing: border-box; left: 45%; top: 7px; transform: translateX(-49%); visibility: hidden; text-align: center; 
-    background: rgba(0,0,0,.8); color: #fff; padding: 0 9px; font: bold 12px Helvetica; box-shadow: 0 0 9px #fff; border-radius: 4px; z-index: 9999}
-.ik-bgword ul li {list-style-type: none; display: block; background: #f1f1f1; color: #191919; margin: 9px 0; padding: 3px 0; font: bold 14px Helvetica; 
-    cursor: pointer; border-radius: 4px}
-.ik-bgword ul li:hover {background: #ccc}
-.ik-bgword:hover ul {visibility: visible}
-.ik-bgword ul li.ik-act-user {font: normal 15px Helvetica}
-.ik-bgword ul li.ik-hidden {display: none}
+#ik-inf button#ik-cancel {float: left; margin: 11px 0 0 2px; background: #e0e0e0; color: #191919}
+.ik-mark {position: relative}
+.ik-mark ul {position: absolute; width: 130px; left: 45%; top: 0; visibility: hidden; transform: translateX(-49%); text-align: center; list-style: none;
+    background: rgba(0, 0, 0, .8); padding: 0 9px; box-shadow: 0 0 9px #fff; z-index: 9999; border-radius: 4px}
+.ik-mark:hover ul {visibility: visible}
+.ik-mark ul li {background: #f1f1f1; color: #191919; margin: 9px 0; padding: 4px 0; font: normal 15px Arial; cursor: pointer; word-wrap: break-word; border-radius: 4px}
+.ik-mark ul li:hover {background: #ccc}
+.ik-mark ul li.ik-sugg {font-weight: bold}
+.ik-mark ul li.ik-dis {color: grey; cursor: not-allowed}
+.ik-corr {padding: 0 1px; font: normal 16px Arial; border-radius: 2px}
 .ik-corr-succ {background: #98FB98}
-.ik-corr-user {background: linear-gradient(to bottom right, #98FB98 50%, #98FB98 50%); border: 1px dotted #589d62}
 .ik-corr-sugg {background: #87cefa}
 .ik-corr-sugg-succ {background: linear-gradient(to bottom right, #98FB98 50%, #87cefa 50%)}
 .ik-corr-sugg2 {background: #f90}
 .ik-corr-sugg2-succ {background: linear-gradient(to bottom right, #98FB98 50%, #f90 50%)}
 .ik-corr-fail {background: #f66}
-.ik-corr-revert {background: #ccc}
-.ik-char-succ {padding: 0 1px}
+.ik-corr-rev {background: #ccc}
+.ik-corr-user {background: #98FB98; border: 1px dotted #589d62}
