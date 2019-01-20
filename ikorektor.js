@@ -2,7 +2,7 @@ var iKorektor = new function() {
     const lnkUrl = "https://ikorektor.pl/";
     const apiUrl = "https://api.ikorektor.pl";
     const cssUrl = "https://cdn.jsdelivr.net/gh/ikorektor/plugin@2.0.0/css/style.min.css";
-    const cssLnk = `<link rel="stylesheet" href="${cssUrl}" integrity="sha384-t2m1T6TJGVTXgC/sZz2+bKzzG8rjeSj/fceztPpbz2/VyR8nvhZ3E0xxYcAB4kQz" crossorigin="anonymous">`;
+    const cssLnk = `<link rel="stylesheet" href="${cssUrl}" integrity="sha384-G3dOApykiTPL7aLeEbzVHXwUSk1JTWV52G674xzrN19aPDVo7YHmxRvZfI1+n9RG" crossorigin="anonymous">`;
     
     var activeEl, txtOrig, txtOrigAll, conf = {location: "bottom", inputs: true, prompt: false, parags: 0, profanity: 0, gateway: true};
 
