@@ -2,19 +2,18 @@
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
 .ik-spin:after {-webkit-animation: spin 2s linear infinite; -moz-animation: spin 2s linear infinite; animation: spin 2s linear infinite}
-#ik-do {position: absolute; display: none; width: 30px; height: 30px; border: none; opacity: .7; padding: 0; margin: 0; box-shadow: 0 0 5px grey; 
-    background: #093 url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@2.0.0/img/btn.png) no-repeat 7px 2px; overflow: hidden; cursor: pointer; z-index: 9999; border-radius: 15px; 
+#ik-do, #ik-do:after {position: absolute; width: 30px; height: 30px; background: #093 url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@2.0.0/img/btn.png) no-repeat 7px 2px; border-radius: 15px}
+#ik-do {display: none; border: none; opacity: .7; padding: 0; margin: 0; box-shadow: 0 0 5px grey; overflow: hidden; cursor: pointer; z-index: 9999;  
     -webkit-transition: width 400ms ease-in-out; -moz-transition: width 400ms ease-in-out; -o-transition: width 400ms ease-in-out; transition: width 400ms ease-in-out}
-#ik-do:after {content: ""; position: absolute; top: 0; right: 0; width: 30px; height: 30px; 
-    background: #093 url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@2.0.0/img/btn.png) no-repeat -102px 2px; border-radius: 15px}
-#ik-do:hover {opacity: 1; width: 136px}
-#ik-inf {display: none; width: 92%; max-width: 450px; position: absolute; margin: 0; padding: 11px 11px 0; background: #fff; color: #191919; box-shadow: 0 0 5px grey; 
+#ik-do:after {content: ""; top: 0; right: 0; background-position: -102px 2px}
+#ik-do:hover {opacity: 1; width: 138px}
+#ik-inf {display: none; width: 90%; max-width: 450px; position: absolute; margin: 0; padding: 11px 11px 0; background: #fff; color: #191919; box-shadow: 0 0 5px grey; 
     box-sizing: border-box; z-index: 9999; border-radius: 4px}
 #ik-inf:before {content: ""; position: absolute; bottom: 100%; right: 6px; border: solid; border-width: 9px; border-color: transparent transparent #fff transparent}
 #ik-inf div {width: 100%; margin: 0; padding: 6px; box-sizing: border-box; border: 2px solid #f1f1f1; background: #fff; text-align: left; white-space: pre-wrap; 
     font: normal 16px Arial; line-height: 22px; border-radius: 4px}
 #ik-inf div.ik-corr-err {font-style: oblique}
-#ik-inf p {margin: 0; padding: 0; text-align: right; font: normal 11px Arial; color: grey; clear: both}
+#ik-inf p {margin: 0; padding: 0; text-align: center; font: normal 11px Arial; color: grey; clear: both}
 #ik-inf p a {display: inline-block; margin: 0 8px 7px}
 #ik-inf a {color: #0078A0}
 #ik-inf button {display: inline-block; height: 32px; width: 48%; margin: 11px 2px; padding: 0; float: right; background: #589d62; color: #fff; 
