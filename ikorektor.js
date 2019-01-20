@@ -2,7 +2,7 @@ var iKorektor = new function() {
     const lnkUrl = "https://ikorektor.pl/";
     const apiUrl = "https://api.ikorektor.pl";
     const cssUrl = "https://cdn.jsdelivr.net/gh/ikorektor/plugin@2.0.0/css/style.min.css";
-    const cssLnk = `<link rel="stylesheet" href="${cssUrl}" integrity="sha384-IhrQAYSLguA60x3uUU1m4MgCQfrLbvjs7xWnRLnv2sUNj0QAwfcfzNxY4qMbubXa" crossorigin="anonymous">`;
+    const cssLnk = `<link rel="stylesheet" href="${cssUrl}" integrity="sha384-t2m1T6TJGVTXgC/sZz2+bKzzG8rjeSj/fceztPpbz2/VyR8nvhZ3E0xxYcAB4kQz" crossorigin="anonymous">`;
     
     var activeEl, txtOrig, txtOrigAll, conf = {location: "bottom", inputs: true, prompt: false, parags: 0, profanity: 0, gateway: true};
 
@@ -103,6 +103,7 @@ var iKorektor = new function() {
             var infEl = document.getElementById("ik-inf");
             var condDesktop = window.innerWidth > 720 && (!infEl || !isVisible(infEl));
             var condMobile = window.innerWidth < 721 && !isVisible(activeEl);
+            
             if (condDesktop || condMobile) btnEl.style.display = "none";
         }
     };
@@ -166,7 +167,7 @@ var iKorektor = new function() {
         
         if (!infEl) {
             document.body.insertAdjacentHTML("beforeend", `<div id="ik-inf"><div></div>${btn("Anuluj", "ik-cancel") + btn("Akceptuj i zamień", "ik-accept")}
-<p>${lnk("pluginy", "Plugin autokorekty © 2019 iKorektor")+"•"+lnk("kontakt?report", "Zgłoś błąd korekty", "ik-report")+"•"+lnk("info", "Informacje")}</p></div>`);
+<p>${lnk("pluginy", "Plugin autokorekty © iKorektor")+"•"+lnk("info", "Informacje")+"•"+lnk("kontakt?report", "Zgłoś błąd korekty", "ik-report")}</p></div>`);
             corrSetListeners(); // can be unnecessary if the first action is fail/error
             return infShow(inf, isErr);
         }
