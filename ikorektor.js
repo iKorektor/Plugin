@@ -1,14 +1,17 @@
 var iKorektor = new function() {
     const lnkUrl = "https://ikorektor.pl/";
     const apiUrl = "https://api.ikorektor.pl";
-    const cssUrl = "https://cdn.jsdelivr.net/gh/ikorektor/plugin@2/css/style.min.css";
-    const cssLnk = `<link rel="stylesheet" href="${cssUrl}" integrity="sha384-G3dOApykiTPL7aLeEbzVHXwUSk1JTWV52G674xzrN19aPDVo7YHmxRvZfI1+n9RG" crossorigin="anonymous">`;
-    
-    var activeEl, txtOrig, txtOrigAll, conf = {location: "bottom", inputs: true, prompt: false, parags: 0, profanity: 0, gateway: true};
+    var cssLnk = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ikorektor/plugin@2/css/style.min.css">`;
+    var activeEl, txtOrig, txtOrigAll;
+    var conf = {location: "bottom", inputs: true, prompt: false, parags: 0, profanity: 0, gateway: true, version: null, csshash: null};
 
     this.init = function(listen) {
-        if (typeof iKorektorConf === "object") conf = Object.assign(conf, iKorektorConf);
-        if (listen) document.addEventListener("click", clickEv);
+        if (typeof iKorektorConf === "object") 
+            conf = Object.assign(conf, iKorektorConf);
+        if (conf.version && conf.csshash) 
+            cssLnk = cssLnk.replace("@2", "@" + conf.version).replace(">", ` integrity="${conf.csshash}" crossorigin="anonymous">`);
+        if (listen) 
+            document.addEventListener("click", clickEv);
     };
     
     var clickEv = function(e) {
@@ -22,7 +25,8 @@ var iKorektor = new function() {
             activeEl = el;
             btnShow();    
         } else if (tag === "li") {
-            if (el.className.indexOf("ik-") >= 0 && !el.classList.contains("ik-dis")) wordAction(el);
+            if (el.className.indexOf("ik-") >= 0 && !el.classList.contains("ik-dis")) 
+                wordAction(el);
         } else if (conf.prompt && el.type === "submit") {
             submitEv(e);
         } else {
@@ -120,7 +124,11 @@ var iKorektor = new function() {
     };
 
     var corrAjax = function(txt) {
-        fetch(apiUrl, {method: "POST", body: getFormData(txt), credentials: "include"}).then(resp => {
+        fetch(apiUrl, {
+            method: "POST",
+            body: getFormData(txt),
+            credentials: "include"
+        }).then(resp => {
             if (resp.ok) return resp.json();
             throw Error(resp.statusText);
         }).then(data => {
@@ -227,11 +235,16 @@ var iKorektor = new function() {
         var chars = txt.match(/.{4}[,.)”–?]|[(„].{4}/g);
         var suggWords = [];
 
-        if (chars) txt = corrMarkChars(txt, chars);
-        if (data.hasOwnProperty("sugg")) txt = corrMarkSuggs(txt, data.sugg, suggWords);
-        if (words) txt = corrMarkSucc1(txt, words);
-        if (data.hasOwnProperty("succ")) txt = corrMarkSucc2(txt, data.succ, suggWords);
-        if (data.hasOwnProperty("fail")) txt = corrMarkFails(txt, data.fail);
+        if (chars) 
+            txt = corrMarkChars(txt, chars);
+        if (data.hasOwnProperty("sugg")) 
+            txt = corrMarkSuggs(txt, data.sugg, suggWords);
+        if (words) 
+            txt = corrMarkSucc1(txt, words);
+        if (data.hasOwnProperty("succ")) 
+            txt = corrMarkSucc2(txt, data.succ, suggWords);
+        if (data.hasOwnProperty("fail")) 
+            txt = corrMarkFails(txt, data.fail);
 
         return txt;
     };
