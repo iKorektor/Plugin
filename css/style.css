@@ -2,7 +2,7 @@
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
 .ik-spin:after {-webkit-animation: spin 2s linear infinite; -moz-animation: spin 2s linear infinite; animation: spin 2s linear infinite}
-#ik-do, #ik-do:after {position: absolute; width: 30px; height: 30px; background: #093 url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@2.0.0/img/btn.png) no-repeat 7px 2px; border-radius: 15px}
+#ik-do, #ik-do:after {position: absolute; width: 30px; height: 30px; background: #093 url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@2/img/btn.png) no-repeat 7px 2px; border-radius: 15px}
 #ik-do {display: none; border: none; opacity: .7; padding: 0; margin: 0; box-shadow: 0 0 5px grey; overflow: hidden; cursor: pointer; z-index: 9999;  
     -webkit-transition: width 400ms ease-in-out; -moz-transition: width 400ms ease-in-out; -o-transition: width 400ms ease-in-out; transition: width 400ms ease-in-out}
 #ik-do:after {content: ""; top: 0; right: 0; background-position: -102px 2px}
