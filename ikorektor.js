@@ -3,28 +3,48 @@ var iKorektor = new function() {
     const apiUrl = "https://api.ikorektor.pl";
     var cssLnk = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ikorektor/plugin@2/css/style.min.css">`;
     var activeEl, txtOrig, txtOrigAll;
-    var conf = {location: "bottom", inputs: true, prompt: false, parags: 0, profanity: 0, gateway: true, version: null, csshash: null};
+    var conf = {
+        type: "small", 
+        location: "bottom", 
+        color: "#093", 
+        inputs: true, 
+        prompt: false, 
+        parags: 0, 
+        profanity: 0, 
+        gateway: true, 
+        version: null, 
+        csshash: null
+    };
 
     this.init = function(listen) {
         if (typeof iKorektorConf === "object") 
             conf = Object.assign(conf, iKorektorConf);
         if (conf.version && conf.csshash) 
             cssLnk = cssLnk.replace("@2", "@" + conf.version).replace(">", ` integrity="${conf.csshash}" crossorigin="anonymous">`);
-        if (listen) 
+        if (listen)
             document.addEventListener("click", clickEv);
+        
+        var el = document.activeElement;
+        
+        if (el && isTxtArea(el)) { // check textarea autofocus
+            activeEl = el;
+            btnShow();
+        }
     };
     
     var clickEv = function(e) {
         var el = e.target;
         if (!el) return;
         
-        var tag = el.tagName.toLowerCase();
-
-        if (tag === "textarea" || (conf.inputs && tag === "input" && el.type === "text")) {
-            if (activeEl !== el) txtOrigAll = null; // reset Ctrl+Z functionality if active element changed
-            activeEl = el;
-            btnShow();    
-        } else if (tag === "li") {
+        if (isTxtArea(el)) {
+            var btnEl = document.getElementById("ik-do");
+            
+            if (!btnEl || !btnEl.classList.contains("ik-spin")) {
+                if (activeEl !== el) txtOrigAll = null; // reset Ctrl+Z text, because active element has changed
+                activeEl = el;
+                btnShow(btnEl);
+            }
+        } else if (el.tagName.toLowerCase() === "li") {
             if (el.className.indexOf("ik-") >= 0 && !el.classList.contains("ik-dis")) 
                 wordAction(el);
         } else if (conf.prompt && el.type === "submit") {
@@ -43,8 +63,10 @@ var iKorektor = new function() {
                     activeEl.focus();
                     break;
                 case "ik-report":
+                case "ik-target":
                     e.preventDefault();
-                    window.open(el.href + (txtOrig ? "=" + encodeURIComponent(txtOrig) : ""));
+                    var txt = (el.id === "ik-target") ? activeEl.value : txtOrig;
+                    window.open(el.href + (txt ? "=" + encodeURIComponent(txt) : ""));
                     break;
                 default:
                     btnHide();
@@ -77,19 +99,19 @@ var iKorektor = new function() {
             }
         }
     };
+    
+    var isTxtArea = function(el) {
+        var tag = el.tagName.toLowerCase();
+        return tag === "textarea" || (conf.inputs && tag === "input" && el.type === "text");
+    };
 
-    var btnShow = function() {
-        var btnEl = document.getElementById("ik-do");
-        
-        if (!btnEl) {
-            document.body.insertAdjacentHTML("beforeend", btn("", "ik-do") + cssLnk);
-            return setTimeout(btnShow, 500); // wait until CSS file is loaded and show the button properly
-        }
-        
+    var btnShow = function(el) {
+        var btnEl = el || document.getElementById("ik-do");
+        if (!btnEl) return btnSet();
         btnEl.style.display = "block";
         
         var elOffs = getOffset(activeEl);
-        var top = (conf.location === "top") ? elOffs.top + 5 : elOffs.top + activeEl.offsetHeight - btnEl.offsetHeight - 5;
+        var top = (conf.location === "top") ? elOffs.top + 5 : elOffs.top + activeEl.offsetHeight - 35; // rigid btn height due to CSS load delay on 1st show
         var right = window.innerWidth - (elOffs.left + activeEl.offsetWidth);
         
         btnEl.style.top = top.toFixed(2) + "px";
@@ -100,21 +122,29 @@ var iKorektor = new function() {
         if (infEl) infEl.style.display = "none";
     };
     
+    var btnSet = function() {
+        document.body.insertAdjacentHTML("beforeend", btn("", "ik-do") + cssLnk);
+        var btnEl = document.getElementById("ik-do");
+        btnEl.classList.toggle("sml", conf.type === "small");
+        btnEl.style.setProperty("background-color", conf.color);
+        btnEl.style.setProperty("--bgcolor", conf.color); // for CSS background :after pseudoelement
+        btnShow(btnEl);
+    };
+    
     var btnHide = function() {
         var btnEl = document.getElementById("ik-do");
         
-        if (btnEl && isVisible(btnEl)) {
+        if (btnEl && !btnEl.disabled && isVisible(btnEl)) {
             var infEl = document.getElementById("ik-inf");
-            var condDesktop = window.innerWidth > 720 && (!infEl || !isVisible(infEl));
-            var condMobile = window.innerWidth < 721 && !isVisible(activeEl);
-            
-            if (condDesktop || condMobile) btnEl.style.display = "none";
+            if (!infEl || !isVisible(infEl))
+                btnEl.style.display = "none";
         }
     };
 
     var corrInit = function() {
-        var txt = getTxtareaTxt();
-        if (txt.length < 3) return infShow("Tekst jest zbyt krótki.", true);
+        var txt = getAreaTxt();
+        if (txt.length < 3)
+            return infShow("Tekst jest zbyt krótki.", true);
 
         var btnEl = document.getElementById("ik-do");
         btnEl.disabled = true;
@@ -135,9 +165,9 @@ var iKorektor = new function() {
             if (data.hasOwnProperty("error")) {
                 infShow(corrErrorTxt(data, txt.length), true);
             } else {
-                txtOrig = txt; // original source of corrected text (can be a part of area text due to selection)
-                txtOrigAll = activeEl.value; // whole area text (useful for proper correction revert by Ctrl+Z)
-                conf.prompt = false; // do not prompt is user successfully corrected at least once
+                txtOrig = txt; // original source text (can be a part of area text due to selection)
+                txtOrigAll = activeEl.value; // whole source text (useful for proper correction revert by Ctrl+Z)
+                conf.prompt = false; // do not prompt if user successfully corrected at least once
                 
                 var p = document.createElement("p");
                 p.textContent = data.text;
@@ -165,20 +195,14 @@ var iKorektor = new function() {
         return fd;
     };
 
-    var getTxtareaTxt = function() {
+    var getAreaTxt = function() {
         var selStart = activeEl.selectionStart, selEnd = activeEl.selectionEnd;
         return (selStart === selEnd) ? activeEl.value.trim() : activeEl.value.slice(selStart, selEnd);
     };
 
     var infShow = function(inf, isErr) {
         var infEl = document.getElementById("ik-inf");
-        
-        if (!infEl) {
-            document.body.insertAdjacentHTML("beforeend", `<div id="ik-inf"><div></div>${btn("Anuluj", "ik-cancel") + btn("Akceptuj i zamień", "ik-accept")}
-<p>${lnk("pluginy", "Plugin autokorekty © iKorektor")+"•"+lnk("info", "Informacje")+"•"+lnk("kontakt?report", "Zgłoś błąd korekty", "ik-report")}</p></div>`);
-            corrSetListeners(); // can be unnecessary if the first action is fail/error
-            return infShow(inf, isErr);
-        }
+        if (!infEl) return infSet(inf, isErr);
         
         var btnEl = document.getElementById("ik-do");
         var txtEl = infEl.querySelector("div");
@@ -194,6 +218,13 @@ var iKorektor = new function() {
         txtEl.classList.toggle("ik-corr-err", isErr);
         
         infEl.querySelector("#ik-accept").disabled = isErr;
+    };
+    
+    var infSet = function(inf, isErr) {
+        document.body.insertAdjacentHTML("beforeend", `<div id="ik-inf"><div></div>${btn("Anuluj", "ik-cancel") + btn("Akceptuj i zamień", "ik-accept")}
+<p>${lnk("pluginy", "Plugin autokorekty © iKorektor")+"•"+lnk("info", "Informacje")+"•"+lnk("kontakt?report", "Zgłoś błąd korekty", "ik-report")}</p></div>`);
+        corrSetListeners(); // can be unnecessary if the first action is fail/error
+        infShow(inf, isErr);
     };
     
     var corrSetListeners = function() {
@@ -223,7 +254,7 @@ var iKorektor = new function() {
             case "CALLS_LMT":
                 return "Osiągnięto limit korekt na minutę. Spróbuj ponownie za chwilę.";
             case "SITE_LMT":
-                return "Dobowy limit użycia pluginu został osiągnięty. Tekst możesz poprawić na stronie " + lnk("", "iKorektor.pl");
+                return "Dobowy limit użycia pluginu został osiągnięty. Tekst możesz poprawić na stronie " + lnk("?txt", "iKorektor.pl", "ik-target");
         }
 
         return "Coś poszło nie tak. Spróbuj ponownie za chwilę lub " + lnk("info", "dowiedz się więcej");
