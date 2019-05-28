@@ -180,7 +180,7 @@ var iKorektor = new function() {
             data.hasOwnProperty("error") ? corrErr(data) : corrSucc(data);
             
             if (data.hasOwnProperty("today_chars_used"))
-                $("ik-today-chars-used").textContent = number(data.today_chars_used);
+                $("ik-today-chars-used").textContent = data.today_chars_used;
         }).catch(err => {
             console.log(err);
             corrErr({}, null);
@@ -613,6 +613,22 @@ ${btn("Anuluj", "ik-cancel") + btn("Akceptuj i zamień", "ik-accept")}
     
     var isVisible = function(el) {
         return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+    };
+    
+    var fadeIn = function(el, ms) {
+        el.style.opacity = 0;
+        let opacity = 0;
+
+        const timer = setInterval(function() {
+            opacity += 50 / (ms || 500);
+
+            if (opacity >= 1) {
+                clearInterval(timer);
+                opacity = 1;
+            }
+
+            el.style.opacity = opacity;
+        }, 50);
     };
     
     var $ = function(id) {
