@@ -1,19 +1,21 @@
 var iKorektor = new function() {
     const lnkUrl = "https://ikorektor.pl/";
     const apiUrl = "https://api.ikorektor.pl";
-    var cssLnk = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ikorektor/plugin@2/css/style.min.css">`;
-    var activeEl, txtOrig, txtOrigAll;
+    var cssLnk = "https://cdn.jsdelivr.net/gh/ikorektor/plugin@2/css/style.min.css";
+    var btnEl, activeEl, txtOrig, txtOrigAll, sel, selRange, corrCnt;
     var conf = {
         type: "small", 
         location: "bottom", 
         color: "#093", 
         inputs: true, 
+        txtbg: true,
         prompt: false, 
         parags: 0, 
         profanity: 0, 
         gateway: true, 
         version: null, 
-        csshash: null
+        csshash: null,
+        listen: false
     };
 
     this.init = function(listen) {
@@ -21,32 +23,28 @@ var iKorektor = new function() {
             conf = Object.assign(conf, iKorektorConf);
         if (conf.version && conf.csshash) 
             cssLnk = cssLnk.replace("@2", "@" + conf.version).replace(">", ` integrity="${conf.csshash}" crossorigin="anonymous">`);
-        if (listen)
+        if (listen || conf.listen)
             document.addEventListener("click", clickEv);
         
+        btnEl = null, txtOrig = null;
+        checkAutofocus();
+    };
+    
+    var checkAutofocus = function() {
         var el = document.activeElement;
-        
-        if (el && isTxtArea(el)) { // check textarea autofocus
-            activeEl = el;
-            btnShow();
-        }
+        if (el && isTxtArea(el)) btnShow();
     };
     
     var clickEv = function(e) {
         var el = e.target;
         if (!el) return;
         
-        if (isTxtArea(el)) {
-            var btnEl = document.getElementById("ik-do");
-            
-            if (!btnEl || !btnEl.classList.contains("ik-spin")) {
-                if (activeEl !== el) txtOrigAll = null; // reset Ctrl+Z text, because active element has changed
-                activeEl = el;
-                btnShow(btnEl);
-            }
-        } else if (el.tagName.toLowerCase() === "li") {
-            if (el.className.indexOf("ik-") >= 0 && !el.classList.contains("ik-dis")) 
-                wordAction(el);
+        if (!(btnEl && btnEl.disabled) && isTxtArea(el)) {
+            btnShow();
+        } else if (el.tagName.toLowerCase() === "li" && el.className.indexOf("ik-") > -1 && !el.classList.contains("ik-dis")) {
+            wordAction(el);
+        } else if (el.parentNode.id === "ik-lmt") {
+            slide(el.parentNode);
         } else if (conf.prompt && el.type === "submit") {
             submitEv(e);
         } else {
@@ -59,19 +57,28 @@ var iKorektor = new function() {
                     break;
                 case "ik-cancel":
                     el.parentNode.style.display = "none";
-                    document.getElementById("ik-do").disabled = false;
                     activeEl.focus();
                     break;
+                case "ik-about":
+                    window.open(lnkUrl + "pluginy");
+                    break;
                 case "ik-report":
+                    window.open(lnkUrl + "kontakt?report=" + (txtOrig ? encodeURIComponent(txtOrig) : ""));
+                    break;
                 case "ik-target":
                     e.preventDefault();
-                    var txt = (el.id === "ik-target") ? activeEl.value : txtOrig;
-                    window.open(el.href + (txt ? "=" + encodeURIComponent(txt) : ""));
+                    window.open(lnkUrl + "?txt=" + encodeURIComponent(activeEl.value));
                     break;
                 default:
                     btnHide();
             }
         }
+    };
+    
+    var slide = function(el) {
+        var height = el.offsetHeight / el.childElementCount;
+        var top = parseInt(el.style.top);
+        el.style.top = el.style.top === `-${el.offsetHeight - height}px` ? 0 : (isNaN(top) ? -height : top - height) + "px";
     };
     
     var submitEv = function(e) {
@@ -102,11 +109,17 @@ var iKorektor = new function() {
     
     var isTxtArea = function(el) {
         var tag = el.tagName.toLowerCase();
-        return tag === "textarea" || (conf.inputs && tag === "input" && el.type === "text");
+
+        if (tag === "textarea" || (conf.inputs && tag === "input" && el.type === "text") || el.contentEditable === "true") {
+            if (activeEl !== el) txtOrigAll = null; // reset Ctrl+Z text, because active element has changed
+            activeEl = el;
+            return true;
+        }
+        
+        return false;
     };
 
-    var btnShow = function(el) {
-        var btnEl = el || document.getElementById("ik-do");
+    var btnShow = function() {
         if (!btnEl) return btnSet();
         btnEl.style.display = "block";
         
@@ -118,75 +131,102 @@ var iKorektor = new function() {
         btnEl.style.right = right.toFixed(2) + "px";
         btnEl.disabled = false;
         
-        var infEl = document.getElementById("ik-inf");
+        var infEl = $("ik-inf");
         if (infEl) infEl.style.display = "none";
     };
     
     var btnSet = function() {
         document.body.insertAdjacentHTML("beforeend", btn("", "ik-do") + cssLnk);
-        var btnEl = document.getElementById("ik-do");
+        btnEl = $("ik-do");
         btnEl.classList.toggle("sml", conf.type === "small");
         btnEl.style.setProperty("background-color", conf.color);
         btnEl.style.setProperty("--bgcolor", conf.color); // for CSS background :after pseudoelement
-        btnShow(btnEl);
+        btnShow();
     };
     
     var btnHide = function() {
-        var btnEl = document.getElementById("ik-do");
-        
         if (btnEl && !btnEl.disabled && isVisible(btnEl)) {
-            var infEl = document.getElementById("ik-inf");
-            if (!infEl || !isVisible(infEl))
-                btnEl.style.display = "none";
+            var infEl = $("ik-inf");
+            if (!infEl || !isVisible(infEl)) btnEl.style.display = "none";
         }
     };
 
     var corrInit = function() {
+        btnEl.disabled = true;
+        sel = window.getSelection();
         var txt = getAreaTxt();
-        if (txt.length < 3)
+        
+        if (txtOrig === txt) // nothing has changed
+            return infShow(); // show inf element with last information / text
+        
+        txtOrig = txt;
+        corrCnt = 0;
+
+        if (txt.trim().length < 3)
             return infShow("Tekst jest zbyt krótki.", true);
 
-        var btnEl = document.getElementById("ik-do");
-        btnEl.disabled = true;
-        btnEl.classList.add("ik-spin");
-        
-        corrAjax(txt);
+        corrAjax();
     };
 
-    var corrAjax = function(txt) {
+    var corrAjax = function() {
         fetch(apiUrl, {
             method: "POST",
-            body: getFormData(txt),
+            body: getFormData(),
             credentials: "include"
         }).then(resp => {
             if (resp.ok) return resp.json();
             throw Error(resp.statusText);
         }).then(data => {
-            if (data.hasOwnProperty("error")) {
-                infShow(corrErrorTxt(data, txt.length), true);
-            } else {
-                txtOrig = txt; // original source text (can be a part of area text due to selection)
-                txtOrigAll = activeEl.value; // whole source text (useful for proper correction revert by Ctrl+Z)
-                conf.prompt = false; // do not prompt if user successfully corrected at least once
-                
-                var p = document.createElement("p");
-                p.textContent = data.text;
-                data.text = p.innerHTML; // a trick to encode user's HTML tags
-                
-                infShow(corrMark(data), false);
-            }
+            data.hasOwnProperty("error") ? corrErr(data) : corrSucc(data);
+            
+            if (data.hasOwnProperty("today_chars_used"))
+                $("ik-today-chars-used").textContent = number(data.today_chars_used);
         }).catch(err => {
             console.log(err);
-            infShow(corrErrorTxt({}, null), true);
+            corrErr({}, null);
         });
     };
     
-    var getFormData = function(txt) {
+    var corrSucc = function(data) {
+        txtOrigAll = (activeEl.contentEditable === "true") ? activeEl.innerHTML : activeEl.value; // whole area text (useful for proper correction revert by Ctrl+Z)
+        conf.prompt = false; // do not prompt if user successfully corrected at least once
+                
+        var p = document.createElement("p");
+        p.textContent = data.text;
+        data.text = p.innerHTML; // a trick to encode user's HTML tags
+
+        infShow(corrMark(data), false);
+    };
+    
+    var corrErr = function(data) {
+        var txt = "";
+        
+        switch (data.error) {
+            case "TXT_LEN":
+                txt = `Tekst jest zbyt długi (${txtOrig.length} na ${data.txt_limit} dozwolonych znaków w jednej korekcie).`;
+                break;
+            case "CHARS_LMT":
+                txt = `Pozostało Ci ${data.chars_left} ${wordForm(data.chars_left)} z dobowego limitu, tekst ma ${txtOrig.length} ${wordForm(txtOrig.length)}. Tekst możesz poprawić w serwisie ` + lnk("", "iKorektor.pl", "ik-target");
+                break;
+            case "CALLS_LMT":
+                txt = "Osiągnięto limit korekt na minutę. Spróbuj ponownie za chwilę.";
+                break;
+            case "SITE_LMT":
+                txt = "Dobowy limit użycia pluginu na stronie został osiągnięty. Tekst możesz poprawić w serwisie " + lnk("", "iKorektor.pl", "ik-target");
+                break;
+            default:
+                txt = "Coś poszło nie tak. Spróbuj ponownie za chwilę lub " + lnk("info#errors", "dowiedz się więcej");
+        }
+        
+        infShow(txt, true);
+        txtOrig = null; // do not block correction attempts on error, the condition may change (e.g. server problems)
+    };
+    
+    var getFormData = function() {
         var fd = new FormData();
         
-        fd.append("key", "O");
-        fd.append("text", txt);
-        fd.append("app", "plugin");
+        fd.append("key", "plugin");
+        fd.append("text", txtOrig);
         
         if (conf.parags) fd.append("parags", conf.parags);
         if (conf.profanity) fd.append("profanity", conf.profanity);
@@ -196,35 +236,69 @@ var iKorektor = new function() {
     };
 
     var getAreaTxt = function() {
-        var selStart = activeEl.selectionStart, selEnd = activeEl.selectionEnd;
-        return (selStart === selEnd) ? activeEl.value.trim() : activeEl.value.slice(selStart, selEnd);
+        var txt;
+        if (activeEl.contentEditable === "true") {
+            txt = getContentEditableTxt();
+        } else {
+            var selStart = activeEl.selectionStart, selEnd = activeEl.selectionEnd;
+            txt = (selStart === selEnd) ? activeEl.value.trim() : activeEl.value.slice(selStart, selEnd);
+        }
+        
+        return txt.replace(/\n\n\n+/g, "\n\n"); // do not trim every text - we want to restore leading and ending white spaces on selected text for proper correction accept/replace
+    };
+    
+    var getContentEditableTxt = function() {
+        if (sel.isCollapsed || sel.focusNode.parentNode !== activeEl) { // 2nd condition for text selected outside active element (text area)
+            sel = null; // reset selection eventually used in element, can make a problem in further whole text correction and accept/replace
+        } else {
+            selRange = sel.getRangeAt(0);
+            return sel.toString(); // do not trim(!)
+        }
+
+        return activeEl.innerText.trim();
     };
 
     var infShow = function(inf, isErr) {
-        var infEl = document.getElementById("ik-inf");
+        var infEl = $("ik-inf");
         if (!infEl) return infSet(inf, isErr);
         
-        var btnEl = document.getElementById("ik-do");
-        var txtEl = infEl.querySelector("div");
+        var txtEl = $("ik-txt");
 
-        btnEl.disabled = !isErr;
-        btnEl.classList.remove("ik-spin");
+        btnEl.disabled = false;
         
         infEl.style.top = (parseInt(btnEl.style.top, 10) + btnEl.offsetHeight + 9) + "px";
         infEl.style.right = btnEl.style.right;
         infEl.style.display = "block";
         
-        txtEl.innerHTML = inf;
-        txtEl.classList.toggle("ik-corr-err", isErr);
+        if (inf) {
+            txtEl.innerHTML = inf;
+            txtEl.classList.toggle("ik-corr-err", isErr);
         
-        infEl.querySelector("#ik-accept").disabled = isErr;
+            $("ik-accept").disabled = isErr;
+            $("ik-txt-len").textContent = txtOrig.length;
+            $("ik-corr-cnt").textContent = corrCnt;
+        }
+        
+        fadeIn(txtEl);
     };
     
     var infSet = function(inf, isErr) {
-        document.body.insertAdjacentHTML("beforeend", `<div id="ik-inf"><div></div>${btn("Anuluj", "ik-cancel") + btn("Akceptuj i zamień", "ik-accept")}
-<p>${lnk("pluginy", "Plugin autokorekty © iKorektor")+"•"+lnk("info", "Informacje")+"•"+lnk("kontakt?report", "Zgłoś błąd korekty", "ik-report")}</p></div>`);
+        document.body.insertAdjacentHTML("beforeend", infHTML());
+        $("ik-txt-area").classList.toggle("ik-nobg", !conf.txtbg);
         corrSetListeners(); // can be unnecessary if the first action is fail/error
         infShow(inf, isErr);
+    };
+    
+    var infHTML = function() {
+        return `<div id="ik-inf"><div id="ik-txt-area"><div id="ik-txt"></div>
+<div id="ik-lmt-wnd"><ul id="ik-lmt">
+<li>Poprawionych błędów: <span id="ik-corr-cnt">0</span></li>
+<li>Długość tekstu źródłowego: <span id="ik-txt-len">0</span></li>
+<li>Sprawdzonych znaków dzisiaj: <span id="ik-today-chars-used">0</span></li>
+</ul></div>${lnk("info", "ℹ", "ik-i")}</div>
+${btn("Anuluj", "ik-cancel") + btn("Akceptuj i zamień", "ik-accept")}
+<ul id="ik-menu"><li id="ik-about">© iKorektor Plugin</li>•<li id="ik-report">Zgłoś błąd korekty</li></ul>
+</div>`;
     };
     
     var corrSetListeners = function() {
@@ -234,7 +308,13 @@ var iKorektor = new function() {
             if (e.keyCode === 13 && el && el.classList.contains("ik-corr")) { // 13 == Enter
                 wordEditEnd(el);
             } else if (e.keyCode === 90 && e.ctrlKey && txtOrigAll) { // Ctrl+Z
-                activeEl.value = txtOrigAll;
+                e.preventDefault();
+                
+                if (activeEl.contentEditable === "true")
+                    activeEl.innerHTML = txtOrigAll;
+                else
+                    activeEl.value = txtOrigAll;
+                
                 txtOrigAll = null;
             }
         });
@@ -243,21 +323,6 @@ var iKorektor = new function() {
             var el = e.target;
             if (el && el.classList.contains("ik-corr")) wordEditEnd(el);
         });
-    };
-
-    var corrErrorTxt = function(data, txtLen) {
-        switch (data.error) {
-            case "TXT_LEN":
-                return `Tekst jest zbyt długi (${txtLen} na ${data.txt_limit} dozwolonych znaków w jednej korekcie).`;
-            case "CHARS_LMT":
-                return `Pozostało Ci ${data.chars_left} znaków z dobowego limitu, tekst ma ${txtLen} znaków.`;
-            case "CALLS_LMT":
-                return "Osiągnięto limit korekt na minutę. Spróbuj ponownie za chwilę.";
-            case "SITE_LMT":
-                return "Dobowy limit użycia pluginu został osiągnięty. Tekst możesz poprawić na stronie " + lnk("?txt", "iKorektor.pl", "ik-target");
-        }
-
-        return "Coś poszło nie tak. Spróbuj ponownie za chwilę lub " + lnk("info", "dowiedz się więcej");
     };
 
     var corrMark = function(data) {
@@ -281,9 +346,12 @@ var iKorektor = new function() {
     };
     
     var corrMarkChars = function(txt, chars) {
-        for (var i = 0; i < chars.length; i++)
-            if (txtOrig.indexOf(chars[i]) === -1 && txtOrig.indexOf(unPolish(chars[i].toLowerCase())) === -1)
+        for (var i = 0; i < chars.length; i++) {
+            if (txtOrig.indexOf(chars[i]) === -1 && txtOrig.indexOf(unPolish(chars[i].toLowerCase())) === -1) {
                 txt = txt.replace(chars[i], chars[i].replace(/([,.()„”–?])/g, `<span class="ik-mark"><span data-corr="$1" class="ik-corr ik-corr-succ">$1</span><ul>${wordBtns()}</ul></span>`));
+                corrCnt++;
+            }
+        }
         
         return txt;
     };
@@ -314,6 +382,7 @@ var iKorektor = new function() {
             if (!txtOrig.match(reg)) {
                 txt = txt.replace(reg, `$1<span class="ik-mark"><span data-corr="$2" class="ik-corr ik-corr-succ">$2</span><ul>${wordBtns()}</ul></span>`);
                 txt = txt.replace(new RegExp(`ik-corr-sugg(2?)(?=">${wrd})`, "g"), "ik-corr-sugg$1-succ");
+                corrCnt++;
             }
         }
         
@@ -459,25 +528,61 @@ var iKorektor = new function() {
     };
     
     var corrAccept = function(el) {
-        var txtCorr = stripColorsHTML(el.querySelector("div").innerHTML); // remove iKorektor's HTML tags
+        var txtCorr = corrStripTags($("ik-txt").innerHTML); // remove corrMark() HTML tags
+        
         corrReplaceTxtarea(decodeHTML(txtCorr)); // decode user's HTML tags for text inputs
+        activeEl.focus();
         
         el.style.display = "none";
-        document.getElementById("ik-do").disabled = false;
-        
-        activeEl.focus();
+        btnEl.disabled = false;
     };
     
     var corrReplaceTxtarea = function(txtCorr) {
-        var selStart = activeEl.selectionStart, selEnd = activeEl.selectionEnd;
-        activeEl.value = (selStart === selEnd) ? txtCorr : activeEl.value.substr(0, selStart) + txtOrig.match(/^\s*/) + txtCorr + txtOrig.match(/\s*$/) + activeEl.value.substr(selEnd);
+        if (activeEl.contentEditable === "true") {
+            corrReplaceContentEditable(txtCorr);
+        } else {
+            var selStart = activeEl.selectionStart, selEnd = activeEl.selectionEnd;
+            activeEl.value = (selStart === selEnd) 
+                           ? txtCorr 
+                           : activeEl.value.substr(0, selStart) + corrUntrim(txtCorr) + activeEl.value.substr(selEnd);
+        }
+    };
+    
+    var corrReplaceContentEditable = function(txtCorr) {
+        if (activeEl.innerHTML.match(/<\/(div|p|span)>/) && !confirm("Zamiana spowoduje utratę dodatkowych danych określających np. wygląd tekstu. Czy kontynuować?")) {
+            return false;
+        }
+
+        if (sel) { // check if contentEditable element has selection
+            corrReplaceContent(txtCorr); // if so, then replace as a normal content selection
+        } else {
+            activeEl.innerHTML = txtCorr.replace(/\n/g, "<br>");
+        }
+    };
+    
+    var corrReplaceContent = function(txtCorr) {
+        var txt = corrUntrim(txtCorr);
+        var txtRows = txt.split("\n");
+
+        selRange.deleteContents();
+
+        for (var i = txtRows.length - 1; i >= 0; i--) {
+            selRange.insertNode(document.createTextNode(txtRows[i]));
+            i && selRange.insertNode(document.createElement("br"));
+        }
+
+        sel.removeAllRanges(); // remove selection, we already saved it's state in selRange
+    };
+    
+    var corrUntrim = function(txtCorr) {
+        return txtOrig.match(/^\s*/) + txtCorr + txtOrig.match(/\s*$/); // restore white characters from the beginning and end of the original selected text (correction has removed them)
     };
 
     var unPolish = function(txt) {
         return txt.replace('ó', 'o').replace('ł', 'l').replace('ą', 'a').replace('ę', 'e').replace('ś', 's').replace('ń', 'n').replace('ć', 'c').replace('ż', 'z').replace('ź', 'z');
     };
 
-    var stripColorsHTML = function(txt) {
+    var corrStripTags = function(txt) {
         return txt.replace(/<ul>.*?<\/ul>|<\/?span.*?>/g, "");
     };
 
@@ -490,8 +595,8 @@ var iKorektor = new function() {
         return `<button type="button" id="${id}">${txt}</button>`;
     };
 
-    var lnk = function(uri, txt, id = null) {
-        return `<a href="${lnkUrl + uri}" target="_blank" rel="noopener"${id ? ' id="' + id + '"' : ""}>${txt}</a>`;
+    var lnk = function(uri, txt, id) {
+        return `<a href="${lnkUrl + uri}" target="_blank" rel="noopener"${id ? ` id="${id}"` : ""}>${txt}</a>`;
     };
 
     var getOffset = function(el) {
@@ -502,8 +607,16 @@ var iKorektor = new function() {
         };
     };
     
+    var wordForm = function(cnt) {
+        return cnt.toString().match(/(?:[^1]|^)[234]$/) ? "znaki" : "znaków";
+    };
+    
     var isVisible = function(el) {
         return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+    };
+    
+    var $ = function(id) {
+        return document.getElementById(id);
     };
 };
 
