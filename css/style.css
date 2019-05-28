@@ -1,36 +1,43 @@
-@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
-@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
-@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
-.ik-spin:after {-webkit-animation: spin 2s linear infinite; -moz-animation: spin 2s linear infinite; animation: spin 2s linear infinite}
-#ik-do, #ik-do:after {position: absolute; height: 30px; background: url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@2/img/btn.png) no-repeat 6px 2px; border-radius: 15px}
-#ik-do {width: 136px; display: none; border: none; opacity: .7; padding: 0; margin: 0; box-shadow: 0 0 5px grey; overflow: hidden; cursor: pointer; z-index: 9999}
+#ik-do, #ik-do:after {position: absolute; height: 30px; min-height: 30px; background: url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@2/img/btn.png) no-repeat 6px 2px; border-radius: 15px}
+#ik-do {width: 136px; min-width: 30px; display: none; border: none; opacity: .7; padding: 0; margin: 0; box-shadow: 0 0 5px grey; overflow: hidden; cursor: pointer; z-index: 9999999}
 #ik-do:after {width: 30px; content: ""; top: 0; right: 0; background-position: -102px 2px; background-color: var(--bgcolor)}
+#ik-do:disabled:after {-webkit-animation: ik-spin 2s linear infinite; -moz-animation: ik-spin 2s linear infinite; animation: ik-spin 2s linear infinite}
 #ik-do:hover {opacity: 1}
 #ik-do.sml {width: 30px; -webkit-transition: width 400ms ease-in-out; -moz-transition: width 400ms ease-in-out; -o-transition: width 400ms ease-in-out; transition: width 400ms ease-in-out}
 #ik-do.sml:hover {width: 136px}
-#ik-inf {display: none; width: 90%; max-width: 450px; position: absolute; margin: 0; padding: 11px 11px 0; background: #fff; color: #191919; box-shadow: 0 0 5px grey; 
-    box-sizing: border-box; z-index: 9999; border-radius: 4px}
+#ik-inf {display: none; width: 90%; max-width: 460px; position: absolute; margin: 0; padding: 11px 11px 0; background: #fff; color: #191919; box-shadow: 0 0 5px grey; 
+    font-family: Arial; line-height: normal; box-sizing: border-box; z-index: 99999999; border-radius: 4px}
 #ik-inf:before {content: ""; position: absolute; bottom: 100%; right: 6px; border: solid; border-width: 9px; border-color: transparent transparent #fff transparent}
-#ik-inf div {width: 100%; margin: 0; padding: 6px; box-sizing: border-box; border: 2px solid #f1f1f1; background: #fff; text-align: left; white-space: pre-wrap; 
-    font: normal 16px Arial; line-height: 22px; border-radius: 4px}
-#ik-inf div.ik-corr-err {font-style: oblique}
-#ik-inf p {margin: 0; padding: 0; text-align: center; font: normal 11px Arial; color: grey; clear: both}
-#ik-inf p a {display: inline-block; margin: 0 8px 8px}
-#ik-inf a {color: #0078A0}
-#ik-inf button {display: inline-block; height: 32px; width: 48%; margin: 11px 2px; padding: 0; float: right; background: #589d62; color: #fff; 
-    font: normal 15px Arial; text-align: center; cursor: pointer; border-radius: 4px}
+#ik-inf button {display: inline-block; height: 34px; min-height: 34px; width: 48%; margin: 11px 2px 4px; padding: 0; float: right; background: #589d62; color: #fff; 
+    font: normal 15px Arial; text-align: center; cursor: pointer; border: none; box-shadow: none; border-radius: 17px}
 #ik-inf button:disabled {opacity: .7; cursor: not-allowed}
-#ik-inf button:hover, #ik-inf a:hover {opacity: .7}
-#ik-inf button#ik-cancel {float: left; margin: 11px 0 0 2px; background: #e0e0e0; color: #191919}
+#ik-inf button:hover, #ik-inf a:hover, #ik-lmt:hover {opacity: .7}
+#ik-inf button#ik-cancel {float: left; margin-right: 0; background: #e0e0e0; color: #191919}
+#ik-txt-area {width: 100%; margin: 0; padding: 4px 6px 41px; border: 2px solid #f1f1f1; background: url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@2/img/linedpaper.png) 0 -11px; 
+    position: relative; box-sizing: border-box; border-radius: 4px; clear: both}
+#ik-txt-area.ik-nobg {background-image: none}
+#ik-i {position: absolute; right: 3px; bottom: 2px; text-decoration: none; display: inline-block; width: 17px; height: 17px; background: #ccc; color: #fff; 
+    font: normal 14px/15px Arial; text-align: center; border-radius: 9px}
+#ik-txt {text-align: left; font: normal 18px/23px Arial; color: #191919; white-space: pre-wrap; word-wrap: break-word}
+#ik-txt.ik-corr-err {font-style: oblique}
+#ik-txt a {display: inline; font-size: 18px; color: #0078A0; text-decoration: none}
+#ik-lmt-wnd {height: 18px; overflow: hidden; position: absolute; left: 3px; bottom: 3px; cursor: pointer}
+#ik-lmt {list-style-type: none; padding: 0; margin: 0; position: relative; top: 0; left: 0; -webkit-transition: top .4s ease; transition: top .4s ease}
+#ik-lmt li {height: 18px; font: normal 12px/normal Arial; color: grey}
+#ik-lmt li:after {content: " \2304"; position: relative; top: -2px; font-size: 16px; cursor: pointer; color: #191919}
+#ik-lmt span {font-weight: bold; color: grey}
+#ik-menu {margin: 0; padding: 0; text-align: center; font-size: 12px; color: grey; list-style: none}
+#ik-menu li {display: inline-block; padding: 9px 15px; font: normal 12px Arial; color: #0078A0; text-decoration: none; cursor: pointer}
+#ik-menu li:hover {opacity: .7; background: #f1f1f1}
 .ik-mark {position: relative}
-.ik-mark ul {position: absolute; width: 130px; left: 45%; top: 0; visibility: hidden; transform: translateX(-49%); text-align: center; list-style: none;
-    background: rgba(0, 0, 0, .8); padding: 0 9px; box-shadow: 0 0 9px #fff; z-index: 9999; border-radius: 4px}
+.ik-mark ul {position: absolute; width: 130px; left: 50%; top: 100%; visibility: hidden; transform: translateX(-49%); text-align: center; list-style: none;
+    background: rgba(0, 0, 0, .8); padding: 0 9px; margin: 0; box-shadow: 0 0 9px #fff; z-index: 99999999; box-sizing: border-box; border-radius: 4px}
 .ik-mark:hover ul {visibility: visible}
-.ik-mark ul li {background: #f1f1f1; color: #191919; margin: 9px 0; padding: 4px 0; font: normal 15px Arial; cursor: pointer; word-wrap: break-word; border-radius: 4px}
+.ik-mark ul li {background: #f1f1f1; color: #191919; margin: 9px 0; padding: 4px 0; font: normal 15px Arial; cursor: pointer; word-wrap: break-word; hyphens: auto; border-radius: 4px}
 .ik-mark ul li:hover {background: #ccc}
 .ik-mark ul li.ik-sugg {font-weight: bold}
 .ik-mark ul li.ik-dis {color: grey; cursor: not-allowed}
-.ik-corr {padding: 0 1px; font: normal 16px Arial; border-radius: 2px}
+.ik-corr {padding: 0 1px; color: #191919; border-radius: 2px}
 .ik-corr-succ {background: #98FB98}
 .ik-corr-sugg {background: #87cefa}
 .ik-corr-sugg-succ {background: linear-gradient(to bottom right, #98FB98 50%, #87cefa 50%)}
@@ -39,3 +46,6 @@
 .ik-corr-fail {background: #f66}
 .ik-corr-rev {background: #ccc}
 .ik-corr-user {background: #98FB98; border: 1px dotted #589d62}
+@-moz-keyframes ik-spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes ik-spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes ik-spin { 100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
