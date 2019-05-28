@@ -1,7 +1,7 @@
 var iKorektor = new function() {
     const lnkUrl = "https://ikorektor.pl/";
     const apiUrl = "https://api.ikorektor.pl";
-    var cssLnk = "https://cdn.jsdelivr.net/gh/ikorektor/plugin@2/css/style.min.css";
+    var cssLnk = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ikorektor/plugin@2/css/style.min.css">`;
     var btnEl, activeEl, txtOrig, txtOrigAll, sel, selRange, corrCnt;
     var conf = {
         type: "small", 
