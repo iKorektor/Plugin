@@ -297,7 +297,7 @@ var iKorektor = new function() {
 <li>Sprawdzonych znaków dzisiaj: <span id="ik-today-chars-used">0</span></li>
 </ul></div>${lnk("info", "ℹ", "ik-i")}</div>
 ${btn("Anuluj", "ik-cancel") + btn("Akceptuj i zamień", "ik-accept")}
-<ul id="ik-menu"><li id="ik-about">© iKorektor Plugin</li>•<li id="ik-report">Zgłoś błąd korekty</li></ul>
+<ul id="ik-menu"><li id="ik-about">Plugin © iKorektor</li>•<li id="ik-report">Zgłoś błąd korekty</li></ul>
 </div>`;
     };
     
