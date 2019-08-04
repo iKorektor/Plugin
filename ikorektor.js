@@ -136,11 +136,10 @@ var iKorektor = new function() {
     };
     
     var btnSet = function() {
-        document.body.insertAdjacentHTML("beforeend", btn("", "ik-do") + cssLnk);
+        document.body.insertAdjacentHTML("beforeend", btn("Autokorekta", "ik-do") + cssLnk);
         btnEl = $("ik-do");
-        btnEl.classList.toggle("sml", conf.type === "small");
-        btnEl.style.setProperty("background-color", conf.color);
-        btnEl.style.setProperty("--bgcolor", conf.color); // for CSS background :after pseudoelement
+        btnEl.classList.toggle("ik-do-big", conf.type === "big");
+        btnEl.style.setProperty("--bgcolor", conf.color);
         btnShow();
     };
     
@@ -284,7 +283,7 @@ var iKorektor = new function() {
     
     var infSet = function(inf, isErr) {
         document.body.insertAdjacentHTML("beforeend", infHTML());
-        $("ik-txt-area").classList.toggle("ik-nobg", !conf.txtbg);
+        $("ik-txt-area").classList.toggle("ik-txt-bg", conf.txtbg);
         corrSetListeners(); // can be unnecessary if the first action is fail/error
         infShow(inf, isErr);
     };
