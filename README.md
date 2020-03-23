@@ -1,3 +1,3 @@
-Plugin JavaScript umożliwiający dodanie na własnej stronie opcji autokorekty tekstu w formularzach.
+Plugin JavaScript dodający na stronie opcję autokorekty tekstu w formularzach.
 
-Więcej info na stronie https://ikorektor.pl/pluginy
+Więcej informacji na https://ikorektor.pl/pluginy
