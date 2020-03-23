@@ -1,49 +1,86 @@
 #ik-do, #ik-do:before {position: absolute; width: 30px; height: 30px; border-radius: 15px}
-#ik-do {display: none; border: none; color: #fff; background: var(--bgcolor); font: bold 14px Arial, sans-serif; letter-spacing: 1px;  
-    padding: 0 0 0 26px; margin: 0; box-shadow: 0 0 5px grey; overflow: hidden; cursor: pointer; z-index: 9999999; -webkit-transition: width .4s ease-in-out; transition: width .4s ease-in-out}
-#ik-do:hover, #ik-do.ik-do-big {width: 136px}
-#ik-do:before {content: ""; top: 0; left: 0; background: var(--bgcolor) url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@2/img/gear.png) no-repeat}
+#ik-do {display: none; border: none; color: #fff; background: var(--bgcolor); font: bold 14px Arial, sans-serif; letter-spacing: 1px; outline: none; 
+    padding: 0 0 0 26px; margin: 0; box-shadow: 0 0 20px rgba(0,0,0,.2); cursor: pointer; z-index: 999999; transition: width .5s}
+#ik-do:hover, #ik-do.ik-do-big {width: 130px}
+#ik-do:before {content: "A"; font: bold 13px/1 'Times New Roman CE'; top: 0; left: 0; padding-top: 8px; box-sizing: border-box; 
+    background: var(--bgcolor) url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@3/img/cog.svg) no-repeat 2px 2px; background-size: 26px 26px}
+#ik-do.ik-chrome:before {font-size: 14px; padding-top: 9px}
+#ik-do.ik-chrome-mobile:before {padding-top: 8px}
+#ik-do:hover:before {transform: rotate(-360deg); transition: transform .5s}
+#ik-do.ik-spin:before {transform: rotate(360deg); transition: transform .5s}
 #ik-do:disabled:before {-webkit-animation: ik-spin 2s linear infinite; -moz-animation: ik-spin 2s linear infinite; animation: ik-spin 2s linear infinite}
-#ik-inf {display: none; width: 90%; max-width: 450px; position: absolute; margin: 0; padding: 9px 9px 0; background: #fff; color: #191919; box-shadow: 0 0 5px grey; 
-    font-family: Arial; line-height: normal; box-sizing: border-box; z-index: 9999999; border-radius: 4px}
-#ik-inf:before {content: ""; position: absolute; bottom: 100%; right: 6px; border: solid; border-width: 9px; border-color: transparent transparent #fff transparent}
-#ik-inf button {display: inline-block; height: 34px; min-height: 34px; width: 48%; margin: 11px 2px 4px; padding: 0; float: right; background: #589d62; color: #fff; 
-    font: normal 15px Arial; text-align: center; cursor: pointer; border: none; box-shadow: none; border-radius: 17px}
-#ik-inf button:disabled {opacity: .7; cursor: not-allowed}
-#ik-inf button:hover, #ik-inf a:hover, #ik-lmt:hover {opacity: .7}
-#ik-inf button#ik-cancel {float: left; margin-right: 0; background: #e0e0e0; color: #191919}
-#ik-txt-area {width: 100%; margin: 0; padding: 4px 6px 41px; border: 2px solid #f1f1f1; position: relative; box-sizing: border-box; border-radius: 4px; clear: both}
-#ik-txt-area.ik-txt-bg {background: url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@2/img/linedpaper.png) 0 -11px}
-#ik-i {position: absolute; right: 3px; bottom: 2px; text-decoration: none; display: inline-block; width: 17px; height: 17px; background: #ccc; color: #fff; 
-    font: normal 14px/15px Arial; text-align: center; border-radius: 9px}
-#ik-txt {text-align: left; font: normal 18px/23px Arial; color: #191919; white-space: pre-wrap; word-wrap: break-word}
-#ik-txt.ik-corr-err {font-style: oblique}
-#ik-txt a {display: inline; font: oblique 18px Arial; color: #0078A0; text-decoration: none}
-#ik-lmt-wnd {height: 21px; padding: 0 0 2px 0; margin: 0; overflow: hidden; position: absolute; left: 3px; bottom: 0; cursor: pointer}
-#ik-lmt {list-style: none; padding: 0; margin: 0; position: relative; top: 0; left: 0; -webkit-transition: top .4s ease; transition: top .4s ease}
-#ik-lmt li {height: 21px; margin: 0; padding: 0; font: normal 12px/21px Arial; text-align: left; color: grey}
+#ik-do:not(.ik-do-big) #ik-do-dsc {display: none}
+#ik-do:hover #ik-do-dsc {display: inline}
+#ik-do-alert {display: none; position: absolute; left: -169px; bottom: 0; width: 160px; padding: 4px 0; font: normal 13px/15px Arial; letter-spacing: 0; color: #121212; 
+    background: #fff; box-shadow: 0 0 20px rgba(0,0,0,.2); border-radius: 8px}
+#ik-do-alert:before {content: ""; position: absolute; top: 17px; left: 100%; border: solid; border-width: 6px; border-color: transparent transparent transparent #fff}
+#ik-do:focus {outline: none} 
+#ik-do::-moz-focus-inner {border: 0}
+#ik-panel {display: none; width: 90%; max-width: 450px; position: absolute; margin: 0; padding: 8px; background: #fff; color: #191919; 
+    box-shadow: 0 0 20px rgba(0,0,0,.2); font-family: Arial; line-height: normal; box-sizing: border-box; z-index: 999999; border-radius: 8px}
+#ik-panel:before {content: ""; position: absolute; bottom: 100%; right: 6px; border: solid; border-width: 9px; border-color: transparent transparent #fff transparent}
+.ik-btn {height: 36px; min-height: 34px; width: 48%; margin: 9px 2px 2px; padding: 0; float: right; background: #589d62; color: #fff; 
+    font: normal 14px Arial; text-align: center; position: relative; cursor: pointer; border: none; outline: none; box-shadow: none; border-radius: 18px}
+.ik-btn:before {content: "↻"; display: block; position: absolute; left: 15px; top: 3px}
+#ik-accept:before {font: normal 29px/1 Arial; top: 4px; transform: rotate(-15deg) scaleX(-1)}
+#ik-accept:hover:before {transform: rotate(-375deg) scaleX(-1); transition: transform 1s}
+#ik-accept:after {content: "A"; position: absolute; left: 17px; background: #589d62; font: bold 12px/1 Arial; border-top-right-radius: 5px}
+#ik-accept.ik-chrome:before {font-size: 28px; left: 16px; top: 6px}
+#ik-accept.ik-mobile:before {font-size: 26px; left: 12px; top: 3px}
+#ik-cancel:before {content: "⨯"; font: normal 28px/1 Arial; color: gray}
+#ik-cancel.ik-mobile:before {font-size: 30px}
+#ik-cancel {float: left; margin-right: 0; background: #e0e0e0; color: #191919}
+.ik-btn:disabled {opacity: .7; cursor: not-allowed}
+.ik-btn:hover, #ik-panel a:hover, #ik-lmt:hover {opacity: .8}
+#ik-txt-area {width: 100%; margin: 0; padding: 4px 6px 41px; border: 2px solid #f1f1f1; background-position: 0 -11px; letter-spacing: 1px;
+    position: relative; box-sizing: border-box; border-radius: 6px; clear: both}
+#ik-txt-area.ik-txt-bg {background-image: url(https://cdn.jsdelivr.net/gh/ikorektor/plugin@3/img/linedpaper.png)}
+.ik-i {position: absolute; right: 1px; bottom: 1px; text-decoration: none; display: block; width: 20px; height: 20px; background: #ccc; color: #fff; 
+    font: normal 16px/18px Arial; text-align: center; border-radius: 10px}
+.ik-i:hover #ik-menu {visibility: visible}
+#ik-menu {width: 200px; position: absolute; top: 100%; right: 0; visibility: hidden; margin: 0; padding: 0; text-align: center; font-size: 13px; background: #fff; 
+    list-style: none; box-shadow: 0 0 12px silver; border-radius: 6px; z-index: 999999}
+#ik-menu li {height: 32px; margin: 0; font: normal 13px/30px Arial; color: #0078A0; cursor: pointer}
+#ik-menu li:hover {background: #f1f1f1}
+#ik-menu a {display: block; color: #0078A0; text-decoration: none; font: normal 13px/30px Arial}
+#ik-txt-corr {text-align: left; font: normal 18px/23px Arial; color: #191919; white-space: pre-wrap; word-wrap: break-word}
+#ik-txt-corr.ik-corr-err {font-style: oblique}
+#ik-txt-corr a:not(.ik-i) {display: inline; font: oblique 18px Arial; color: #093; text-decoration: underline}
+#ik-lmt-wnd {height: 21px; padding: 0; margin: 0; position: absolute; left: 6px; bottom: 0; overflow: hidden; cursor: pointer}
+#ik-lmt {list-style: none; padding: 0; margin: 0; position: relative; left: 0; top: 0; -webkit-transition: top .4s ease; transition: top .4s ease}
+#ik-lmt li {height: 21px; margin: 0; padding: 0; font: normal 13px/17px Arial; text-align: left; color: grey; letter-spacing: normal}
 #ik-lmt li:after {content: " \2304"; position: relative; top: -2px; font-size: 16px; cursor: pointer; color: #191919}
-#ik-lmt span {font-weight: bold; color: grey}
-#ik-menu {margin: 0; padding: 0; text-align: center; font-size: 12px; color: grey; list-style: none}
-#ik-menu li {display: inline-block; padding: 9px 15px; margin: 0; font: normal 12px/normal Arial; color: #0078A0; text-decoration: none; cursor: pointer}
-#ik-menu li:hover {opacity: .7; background: #f1f1f1}
+#ik-lmt li span:first-child {font-weight: bold}
+#ik-corr-cnt {color: green}
+#ik-panel.ik-chrome .ik-i {line-height: 19px}
+#ik-panel.ik-chrome .ik-mark-menu ul {padding-left: 16px}
 .ik-mark {position: relative}
-.ik-mark ul {position: absolute; width: 130px; left: 50%; top: 100%; visibility: hidden; transform: translateX(-49%); text-align: center; list-style: none;
-    background: rgba(0, 0, 0, .8); padding: 0 9px; margin: 0; box-shadow: 0 0 9px #fff; z-index: 99999999; box-sizing: border-box; border-radius: 4px}
-.ik-mark:hover ul {visibility: visible}
-.ik-mark ul li {background: #f1f1f1; color: #191919; margin: 9px 0; padding: 4px 0; font: normal 15px Arial; cursor: pointer; word-wrap: break-word; hyphens: auto; border-radius: 4px}
-.ik-mark ul li:hover {background: #ccc}
-.ik-mark ul li.ik-sugg {font-weight: bold}
-.ik-mark ul li.ik-dis {color: grey; cursor: not-allowed}
-.ik-corr {padding: 0 1px; color: #191919; border-radius: 2px}
+.ik-corr {display: inline-block; min-width: 2px; min-height: 17px; padding: 0; margin-left: 1px; font: normal 18px Arial; color: #191919; white-space: pre; cursor: auto; border-radius: 2px}
+.ik-corr span {text-decoration: underline green solid; background: none}
 .ik-corr-succ {background: #98FB98}
+.ik-corr-succ-sugg {background: linear-gradient(to bottom right, #98FB98 50%, #87cefa 50%)}
+.ik-corr-succ-fail {background: linear-gradient(to bottom right, #98FB98 50%, #f90 50%)}
 .ik-corr-sugg {background: #87cefa}
-.ik-corr-sugg-succ {background: linear-gradient(to bottom right, #98FB98 50%, #87cefa 50%)}
-.ik-corr-sugg2 {background: #f90}
-.ik-corr-sugg2-succ {background: linear-gradient(to bottom right, #98FB98 50%, #f90 50%)}
 .ik-corr-fail {background: #f66}
+.ik-corr-fail-sugg {background: #f90}
 .ik-corr-rev {background: #ccc}
-.ik-corr-user {background: #98FB98; border: 1px dotted #589d62}
+.ik-corr-user {background: #52d681}
+.ik-mark-menu {display: block; position: absolute; width: 135px; left: 50%; top: 100%; visibility: hidden; transform: translateX(-49%); text-align: left; 
+    letter-spacing: normal; color: #fff; font: normal 13px/1 Arial; background: rgba(0,0,0,.9); padding: 9px; margin: 0;
+    box-shadow: 0 0 9px #fff; box-sizing: border-box; z-index: 999999; border-radius: 6px}
+.ik-mark-menu:before {content: ""; position: absolute; bottom: 100%; left: 46%; border: solid; border-width: 4px; 
+    border-color: transparent transparent rgba(0, 0, 0, .8) transparent}
+.ik-mark:hover .ik-mark-menu {visibility: visible}
+.ik-mark-menu ul {margin: 0 0 8px 0; padding: 0 0 0 11px; list-style: disc; box-sizing: border-box}
+.ik-mark-menu li {margin-bottom: 2px}
+.ik-mark-menu a {position: relative; float: right; color: #fff}
+.ik-mark-btn {width: 100%; background: #f1f1f1; color: #191919; margin: 9px 0 0; padding: 4px 0; font: normal 15px Arial; cursor: pointer;
+    text-align: center; word-wrap: break-word; hyphens: auto; border: none; border-radius: 4px}
+.ik-mark-btn:first-of-type {margin-top: 0}
+.ik-mark-btn:hover {background: #fff}
+.ik-mark-btn:disabled, .ik-mark-btn:disabled span {color: silver}
+.ik-mark-btn.ik-sugg {font-weight: bold}
+.ik-mark-btn span {color: green}
 @-moz-keyframes ik-spin { 100% { -moz-transform: rotate(360deg); } }
 @-webkit-keyframes ik-spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes ik-spin { 100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
