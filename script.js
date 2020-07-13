@@ -119,7 +119,7 @@ class CorrectionButton {
     }
     
     set() {
-        document.body.insertAdjacentHTML("beforeend", '<button type="button" id="ik-do"><span id="ik-do-dsc">Autokorekta</span><span id="ik-do-alert">Wykryto prawdopodobne błędy w tekście</span></button>' + app.cssLnk);
+        document.body.insertAdjacentHTML("beforeend", '<button type="button" id="ik-do"><span id="ik-do-dsc">Autokorekta</span><span id="ik-do-alert"><span class="ik-i">ℹ</span>Wykryto prawdopodobne błędy w tekście.</span></button>' + app.cssLnk);
         this.el = $("ik-do");
         this.el.style.setProperty("--bgcolor", this.conf.color);
         this.el.classList.toggle("ik-do-big", this.conf.type === "big");
@@ -239,8 +239,6 @@ class Correction {
                 break;
             case "CHARS_LMT_DAY":
             case "CALLS_LMT_DAY":
-            case "CHARS_LMT_DAY_SITE":
-            case "CALLS_LMT_DAY_SITE":
                 txt = "Dzienny limit użycia pluginu został osiągnięty. Tekst możesz sprawdzić na " + app.lnk("?txt=" + encodeURIComponent(this.txtOrigin), "iKorektor.pl");
                 break;
             default:
@@ -617,8 +615,8 @@ class App {
         this.apiUrl = "https://api.ikorektor.pl";
         this.cssLnk = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ikorektor/plugin@3/css/style.css">';
         this.txtLmt = 5000;
-        this.charsLmt = 25000;
-        this.callsLmt = 25;
+        this.charsLmt = 20000;
+        this.callsLmt = 20;
         this.panelEl = null;
         this.txtArea = null; // current TextArea object
         this.corr = null; // current Correction object
@@ -815,11 +813,12 @@ class App {
         <div id="ik-lmt-wnd">
         <ul id="ik-lmt">
         <li>Poprawionych błędów: <span id="ik-corr-cnt"></span></li>
-        <li>Długość tekstu źródłowego: <span id="ik-txt-len"></span>/${num(this.txtLmt)}</li>
-        <li>Sprawdzonych znaków dzisiaj: <span id="ik-today-chars"></span>/${num(this.charsLmt)}</li>
-        <li>Wykonanych korekt dzisiaj: <span id="ik-today-calls"></span>/${this.callsLmt}</li>
+        <li>Długość tekstu źródłowego: <span id="ik-txt-len"></span> / ${num(this.txtLmt)}</li>
+        <li>Sprawdzonych znaków dzisiaj: <span id="ik-today-chars">0</span> / ${num(this.charsLmt)}</li>
+        <li>Wykonanych korekt dzisiaj: <span id="ik-today-calls">0</span> / ${this.callsLmt}</li>
         </ul>
         </div>
+        <a href="https://ikorektor.pl" target="_blank" rel="noopener" id="ik-link">iKorektor</a>
         <div class="ik-i">ℹ
         <ul id="ik-menu">
         <li><a href="https://ikorektor.pl/info" target="_blank" rel="noopener">Informacje o korekcie</a></li>
