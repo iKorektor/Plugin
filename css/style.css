@@ -11,10 +11,11 @@
 #ik-do:disabled:before {-webkit-animation: ik-spin 2s linear infinite; -moz-animation: ik-spin 2s linear infinite; animation: ik-spin 2s linear infinite}
 #ik-do:not(.ik-do-big) #ik-do-dsc {display: none}
 #ik-do:hover #ik-do-dsc {display: inline}
-#ik-do-alert {display: none; position: absolute; left: -169px; bottom: 0; width: 160px; padding: 4px 0; font: normal 13px/15px Arial; letter-spacing: 0; color: #121212; 
-    background: #fff; box-shadow: 0 0 20px rgba(0,0,0,.2); border-radius: 8px}
-#ik-do-alert:before {content: ""; position: absolute; top: 17px; left: 100%; border: solid; border-width: 6px; border-color: transparent transparent transparent #fff}
-#ik-do:focus {outline: none} 
+#ik-do-alert {display: none; position: absolute; right: 0; bottom: 38px; width: 180px; padding: 4px 0 4px 36px; font: normal 12px/15px Arial; letter-spacing: 0; 
+    text-align: left; color: #121212; background: #fff; box-shadow: 0 0 20px rgba(0,0,0,.2); box-sizing: border-box; border-radius: 8px}
+#ik-do-alert:before {content: ""; position: absolute; top: 100%; right: 10px; border: solid; border-width: 6px; border-color: #fff transparent transparent transparent}
+#ik-do-alert .ik-i {left: 9px; bottom: 9px}
+#ik-do:focus {outline: none}
 #ik-do::-moz-focus-inner {border: 0}
 #ik-panel {display: none; width: 90%; max-width: 450px; position: absolute; margin: 0; padding: 8px; background: #fff; color: #191919; 
     box-shadow: 0 0 20px rgba(0,0,0,.2); font-family: Arial; line-height: normal; box-sizing: border-box; z-index: 999999; border-radius: 8px}
@@ -38,9 +39,10 @@
 .ik-i {position: absolute; right: 1px; bottom: 1px; text-decoration: none; display: block; width: 20px; height: 20px; background: #ccc; color: #fff; 
     font: normal 16px/18px Arial; text-align: center; border-radius: 10px}
 .ik-i:hover #ik-menu {visibility: visible}
-#ik-menu {width: 200px; position: absolute; top: 100%; right: 0; visibility: hidden; margin: 0; padding: 0; text-align: center; font-size: 13px; background: #fff; 
+#ik-menu {width: 190px; position: absolute; top: 100%; right: 0; visibility: hidden; margin: 0; padding: 0; text-align: left; font-size: 13px; background: #fff; 
     list-style: none; box-shadow: 0 0 12px silver; border-radius: 6px; z-index: 999999}
-#ik-menu li {height: 32px; margin: 0; font: normal 13px/30px Arial; color: #0078A0; cursor: pointer}
+#ik-menu li {height: 32px; margin: 0; font: normal 13px/30px Arial}
+#ik-menu li:before {content: "»"; float: left; color: silver; margin: 0 12px}
 #ik-menu li:hover {background: #f1f1f1}
 #ik-menu a {display: block; color: #0078A0; text-decoration: none; font: normal 13px/30px Arial}
 #ik-txt-corr {text-align: left; font: normal 18px/23px Arial; color: #191919; white-space: pre-wrap; word-wrap: break-word}
@@ -54,6 +56,7 @@
 #ik-corr-cnt {color: green}
 #ik-panel.ik-chrome .ik-i {line-height: 19px}
 #ik-panel.ik-chrome .ik-mark-menu ul {padding-left: 16px}
+#ik-link {position: absolute; right: 26px; bottom: 0; color: #0078A0; font: normal 13px/23px Arial}
 .ik-mark {position: relative}
 .ik-corr {display: inline-block; min-width: 2px; min-height: 17px; padding: 0; margin-left: 1px; font: normal 18px Arial; color: #191919; white-space: pre; cursor: auto; border-radius: 2px}
 .ik-corr span {text-decoration: underline green solid; background: none}
