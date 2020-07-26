@@ -749,10 +749,8 @@ class App {
 
     stopCheckTxtErr(hideAlert = true) {
         clearInterval(this.checkTxtErrId);
-
-        if (hideAlert) {
-            $("ik-do-alert").style.display = "none";
-        }
+        let hide = () => { $("ik-do-alert").style.display = "none"; };
+        hideAlert ? hide() : setTimeout(hide, 9999);
     }
     
     isTxtArea(el) {
@@ -767,7 +765,7 @@ class App {
 
     ready(txtEl) {
         if (this.corr && txtEl !== this.txtArea.el) {
-            this.corr.txtRestore = ""; // active text area has changed – reset ctrl+Z text
+            this.corr.txtRestore = ""; // active text area has changed – reset ctrl+Z text
         }
 
         if (this.panelEl) {
