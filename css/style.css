@@ -11,9 +11,9 @@
 #ik-do:disabled:before {-webkit-animation: ik-spin 2s linear infinite; -moz-animation: ik-spin 2s linear infinite; animation: ik-spin 2s linear infinite}
 #ik-do:not(.ik-do-big) #ik-do-dsc {display: none}
 #ik-do:hover #ik-do-dsc {display: inline}
-#ik-do-alert {display: none; position: absolute; right: 0; bottom: 38px; width: 180px; padding: 4px 0 4px 36px; font: normal 12px/15px Arial; letter-spacing: 0; 
+#ik-do-alert {display: none; position: absolute; right: 0; bottom: -46px; width: 180px; padding: 4px 0 4px 36px; font: normal 12px/15px Arial; letter-spacing: 0; 
     text-align: left; color: #121212; background: #fff; box-shadow: 0 0 20px rgba(0,0,0,.2); box-sizing: border-box; border-radius: 8px}
-#ik-do-alert:before {content: ""; position: absolute; top: 100%; right: 10px; border: solid; border-width: 6px; border-color: #fff transparent transparent transparent}
+#ik-do-alert:before {content: ""; position: absolute; bottom: 100%; right: 9px; border: solid; border-width: 6px; border-color: transparent transparent #fff transparent}
 #ik-do-alert .ik-i {left: 9px; bottom: 9px}
 #ik-do:focus {outline: none}
 #ik-do::-moz-focus-inner {border: 0}
@@ -84,6 +84,4 @@
 .ik-mark-btn:disabled, .ik-mark-btn:disabled span {color: silver}
 .ik-mark-btn.ik-sugg {font-weight: bold}
 .ik-mark-btn span {color: green}
-@-moz-keyframes ik-spin { 100% { -moz-transform: rotate(360deg); } }
-@-webkit-keyframes ik-spin { 100% { -webkit-transform: rotate(360deg); } }
-@keyframes ik-spin { 100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); } }
+@keyframes ik-spin { 100% { -webkit-transform: rotate(360deg); transform: rotate(360deg) } }
